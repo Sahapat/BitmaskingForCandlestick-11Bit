@@ -15,50 +15,103 @@ namespace CandleStick
     };
     enum TypeTrend
     {
-        UP,
-        DOWN
+        DOWN,
+        UP
+    };
+    enum CandleGAP
+    {
+        NotGAP,
+        GAP
     };
 
     class Package
     {
-        public static decimal EncyptData(CandleStickData[] input,float avgBody,float avgUpperS,float avgLowS)
+        public static decimal EncyptData(CandleStickData[] rawData)
         {
             return 0;
         }
-        private byte checkDirection(float open,float close)
+        private byte checkDirection(double open,double close)
         {
-            if (open >= close) return (byte)TypeTrend.UP;
+            if (open > close) return (byte)TypeTrend.UP;
             else return (byte)TypeTrend.DOWN;
         }
-        private byte checkHH(float opendata1,float closedata1,float opendata2,float closedata2)
+        private byte checkHH(double opendata1,double closedata1,double opendata2,double closedata2)
         {
-            float maxData1 = Math.Max(opendata1, closedata1);
-            float maxData2 = Math.Max(opendata2, closedata2);
+            double maxData1 = Math.Max(opendata1, closedata1);
+            double maxData2 = Math.Max(opendata2, closedata2);
 
             if (maxData1 > maxData2) return (byte)TypeTrend.UP;
             else return (byte)TypeTrend.DOWN;
         }
-        private byte checkLL(float opendata1,float closedata1,float opendata2,float closedata2)
+        private byte checkLL(double opendata1,double closedata1,double opendata2,double closedata2)
         {
-            float minData1 = Math.Min(opendata1, closedata1);
-            float minData2 = Math.Min(opendata2, closedata2);
+            double minData1 = Math.Min(opendata1, closedata1);
+            double minData2 = Math.Min(opendata2, closedata2);
             if (minData1 > minData2) return (byte)TypeTrend.UP;
             else return (byte)TypeTrend.DOWN;
         }
-        private byte stutusUpperShadow()
+        private byte stutusUpperShadow(double US,double US_SD,double avgUpShadow,double[] UScentroid)
         {
-            //setting status UpperShadow here
-            return 0;
+            if (US == 0) return (byte)TypeCandle.NONE;
+            else
+            {
+                double Kmean = (US - avgUpShadow) / US_SD;
+                double lenght1 = Math.Abs(UScentroid[0] - Kmean);
+                double lenght2 = Math.Abs(UScentroid[1] - Kmean);
+                double lenght3 = Math.Abs(UScentroid[2] - Kmean);
+
+                if (lenght1 < lenght2)
+                {
+                    return (byte)TypeCandle.LOW;
+                }
+                else if (lenght3 < lenght2)
+                {
+                    return (byte)TypeCandle.HIGH;
+                }
+                else return (byte)TypeCandle.MID;
+            }
         }
-        private byte statusLowerShadow()
+        private byte statusLowerShadow(double LS,double LS_SD,double avgLowShadow,double[] LScentroid)
         {
-            //setting status LowerShadow here
-            return 0;
+            if (LS == 0) return (byte)TypeCandle.NONE;
+            else
+            {
+                double Kmean = (LS - avgLowShadow) / LS_SD;
+                double lenght1 = Math.Abs(LScentroid[0] - Kmean);
+                double lenght2 = Math.Abs(LScentroid[1] - Kmean);
+                double lenght3 = Math.Abs(LScentroid[2] - Kmean);
+
+                if (lenght1 < lenght2)
+                {
+                    return (byte)TypeCandle.LOW;
+                }
+                else if (lenght3 < lenght2)
+                {
+                    return (byte)TypeCandle.HIGH;
+                }
+                else return (byte)TypeCandle.MID;
+            }
         }
-        private byte statusBody()
+        private byte statusBody(double Body,double Body_SD,double avgBody,double[] Bodycentroid)
         {
-            //setting status Body here
-            return 0;
+            if (Body == 0) return (byte)TypeCandle.NONE;
+            else
+            {
+                double Kmean = (Body - avgBody) / Body_SD;
+                double lenght1 = Math.Abs(Bodycentroid[0] - Kmean);
+                double lenght2 = Math.Abs(Bodycentroid[1] - Kmean);
+                double lenght3 = Math.Abs(Bodycentroid[2] - Kmean);
+
+                if (lenght1 < lenght2)
+                {
+                    return (byte)TypeCandle.LOW;
+                }
+                else if (lenght3 < lenght2)
+                {
+                    return (byte)TypeCandle.HIGH;
+                }
+                else return (byte)TypeCandle.MID;
+            }
         }
         private byte checkGAP()
         {
