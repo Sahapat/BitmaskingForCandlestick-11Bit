@@ -23,6 +23,11 @@ namespace CandleStick
         NotGAP,
         GAP
     };
+    enum CheckVolume
+    {
+        NotPeak,
+        Peak
+    };
 
     class Package
     {
@@ -55,16 +60,12 @@ namespace CandleStick
             if (US == 0) return (byte)TypeCandle.NONE;
             else
             {
-                double Kmean = (US - avgUpShadow) / US_SD;
-                double distance1 = Math.Abs(UScentroid[0] - Kmean);
-                double distance2 = Math.Abs(UScentroid[1] - Kmean);
-                double distance3 = Math.Abs(UScentroid[2] - Kmean);
-
-                if (distance1 < distance2)
+                double STD = (US - avgUpShadow) / US_SD;
+                if (STD < (UScentroid[0] + UScentroid[1]) / 2)
                 {
                     return (byte)TypeCandle.LOW;
                 }
-                else if (distance3 < distance2)
+                else if (STD > (UScentroid[1] + UScentroid[2]) / 2)
                 {
                     return (byte)TypeCandle.HIGH;
                 }
@@ -76,16 +77,13 @@ namespace CandleStick
             if (LS == 0) return (byte)TypeCandle.NONE;
             else
             {
-                double Kmean = (LS - avgLowShadow) / LS_SD;
-                double distance1 = Math.Abs(LScentroid[0] - Kmean);
-                double distance2 = Math.Abs(LScentroid[1] - Kmean);
-                double distance3 = Math.Abs(LScentroid[2] - Kmean);
+                double STD = (LS - avgLowShadow) / LS_SD;
 
-                if (distance1 < distance2)
+                if (STD < (LScentroid[0] + LScentroid[1]) / 2)
                 {
                     return (byte)TypeCandle.LOW;
                 }
-                else if (distance3 < distance2)
+                else if (STD > (LScentroid[1] + LScentroid[2]) / 2)
                 {
                     return (byte)TypeCandle.HIGH;
                 }
@@ -97,16 +95,12 @@ namespace CandleStick
             if (Body == 0) return (byte)TypeCandle.NONE;
             else
             {
-                double Kmean = (Body - avgBody) / Body_SD;
-                double distance1 = Math.Abs(Bodycentroid[0] - Kmean);
-                double distance2 = Math.Abs(Bodycentroid[1] - Kmean);
-                double distance3 = Math.Abs(Bodycentroid[2] - Kmean);
-
-                if (distance1 < distance2)
+                double STD = (Body - avgBody) / Body_SD;
+                if (STD < (Bodycentroid[0] + Bodycentroid[1]) / 2)
                 {
                     return (byte)TypeCandle.LOW;
                 }
-                else if (distance3 < distance2)
+                else if (STD > (Bodycentroid[1] + Bodycentroid[2]) / 2)
                 {
                     return (byte)TypeCandle.HIGH;
                 }
@@ -121,10 +115,21 @@ namespace CandleStick
             }
             else return (byte)CandleGAP.NotGAP;
         }
-        private byte checkVolume()
+        private byte checkVolume(double current,params double[] last)
         {
-            //setting status Volume here
-            return 0;
+            double avgLast = 0;
+
+            for(int i =0;i<last.Length;i++)
+            {
+                avgLast += last[i];
+            }
+            avgLast /= last.Length;
+
+            if (current > avgLast)
+            {
+                return (byte)CheckVolume.Peak;
+            }
+            else return (byte)CheckVolume.NotPeak;
         }
     }
 }
