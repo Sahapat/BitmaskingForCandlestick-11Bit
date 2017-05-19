@@ -85,7 +85,7 @@ namespace CandleStick
 
         private void Next_Click(object sender, EventArgs e)
         {
-            currentDisplay 
+            currentDisplay += nextDisplay;
             candleChart.Series[0].Points.Clear();
             setChart();
         }

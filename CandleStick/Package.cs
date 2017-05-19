@@ -56,15 +56,15 @@ namespace CandleStick
             else
             {
                 double Kmean = (US - avgUpShadow) / US_SD;
-                double lenght1 = Math.Abs(UScentroid[0] - Kmean);
-                double lenght2 = Math.Abs(UScentroid[1] - Kmean);
-                double lenght3 = Math.Abs(UScentroid[2] - Kmean);
+                double distance1 = Math.Abs(UScentroid[0] - Kmean);
+                double distance2 = Math.Abs(UScentroid[1] - Kmean);
+                double distance3 = Math.Abs(UScentroid[2] - Kmean);
 
-                if (lenght1 < lenght2)
+                if (distance1 < distance2)
                 {
                     return (byte)TypeCandle.LOW;
                 }
-                else if (lenght3 < lenght2)
+                else if (distance3 < distance2)
                 {
                     return (byte)TypeCandle.HIGH;
                 }
@@ -77,15 +77,15 @@ namespace CandleStick
             else
             {
                 double Kmean = (LS - avgLowShadow) / LS_SD;
-                double lenght1 = Math.Abs(LScentroid[0] - Kmean);
-                double lenght2 = Math.Abs(LScentroid[1] - Kmean);
-                double lenght3 = Math.Abs(LScentroid[2] - Kmean);
+                double distance1 = Math.Abs(LScentroid[0] - Kmean);
+                double distance2 = Math.Abs(LScentroid[1] - Kmean);
+                double distance3 = Math.Abs(LScentroid[2] - Kmean);
 
-                if (lenght1 < lenght2)
+                if (distance1 < distance2)
                 {
                     return (byte)TypeCandle.LOW;
                 }
-                else if (lenght3 < lenght2)
+                else if (distance3 < distance2)
                 {
                     return (byte)TypeCandle.HIGH;
                 }
@@ -98,15 +98,15 @@ namespace CandleStick
             else
             {
                 double Kmean = (Body - avgBody) / Body_SD;
-                double lenght1 = Math.Abs(Bodycentroid[0] - Kmean);
-                double lenght2 = Math.Abs(Bodycentroid[1] - Kmean);
-                double lenght3 = Math.Abs(Bodycentroid[2] - Kmean);
+                double distance1 = Math.Abs(Bodycentroid[0] - Kmean);
+                double distance2 = Math.Abs(Bodycentroid[1] - Kmean);
+                double distance3 = Math.Abs(Bodycentroid[2] - Kmean);
 
-                if (lenght1 < lenght2)
+                if (distance1 < distance2)
                 {
                     return (byte)TypeCandle.LOW;
                 }
-                else if (lenght3 < lenght2)
+                else if (distance3 < distance2)
                 {
                     return (byte)TypeCandle.HIGH;
                 }
