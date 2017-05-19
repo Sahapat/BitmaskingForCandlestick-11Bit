@@ -1,9 +1,0 @@
-C:\Users\TLE\Desktop\CandleStick\CandleStick\bin\Debug\CandleStick.exe.config
-C:\Users\TLE\Desktop\CandleStick\CandleStick\bin\Debug\CandleStick.exe
-C:\Users\TLE\Desktop\CandleStick\CandleStick\bin\Debug\CandleStick.pdb
-C:\Users\TLE\Desktop\CandleStick\CandleStick\obj\Debug\CandleStick.csprojResolveAssemblyReference.cache
-C:\Users\TLE\Desktop\CandleStick\CandleStick\obj\Debug\CandleStick.Form1.resources
-C:\Users\TLE\Desktop\CandleStick\CandleStick\obj\Debug\CandleStick.Properties.Resources.resources
-C:\Users\TLE\Desktop\CandleStick\CandleStick\obj\Debug\CandleStick.csproj.GenerateResource.Cache
-C:\Users\TLE\Desktop\CandleStick\CandleStick\obj\Debug\CandleStick.exe
-C:\Users\TLE\Desktop\CandleStick\CandleStick\obj\Debug\CandleStick.pdb
