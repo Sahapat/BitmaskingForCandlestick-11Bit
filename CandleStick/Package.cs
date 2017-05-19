@@ -113,10 +113,13 @@ namespace CandleStick
                 else return (byte)TypeCandle.MID;
             }
         }
-        private byte checkGAP()
+        private byte checkGAP(CandleStickData currentData,CandleStickData nextData)
         {
-            //setting status GAP here
-            return 0;
+            if (Math.Max(currentData.Open, currentData.Close) < nextData.Low || Math.Min(currentData.Open, currentData.Close) > nextData.High)
+            {
+                return (byte)CandleGAP.GAP;
+            }
+            else return (byte)CandleGAP.NotGAP;
         }
         private byte checkVolume()
         {
