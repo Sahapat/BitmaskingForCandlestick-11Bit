@@ -18,7 +18,8 @@ namespace CandleStick
         private CandleStickData[] ChartData = new CandleStickData[0];
         private CandleNormalData[] NormalData = new CandleNormalData[0];
         private int currentDisplay = 0;
-        private const int nextDisplay = 60;
+        private const int nextDisplay = 5;
+        private const int amountDisplay = 60;
 
         public Form1()
         {
@@ -42,7 +43,7 @@ namespace CandleStick
         {
             candleChart.Series.Clear();
             candleChart.Series.Add("Series").ChartType = SeriesChartType.Candlestick;
-            candleChart.Series[0]["PointWidth"] = "0.7";
+            candleChart.Series[0]["PointWidth"] = "0.65";
             candleChart.Series[0]["PriceUpColor"] = "Lime";
             candleChart.Series[0]["PriceDownColor"] = "Red";
             candleChart.ChartAreas[0].AxisX.MajorGrid.LineColor = Color.Gray;
@@ -54,7 +55,7 @@ namespace CandleStick
         }
         private void setChart()
         {
-            for(int i = currentDisplay;i<currentDisplay+nextDisplay;i++)
+            for(int i = currentDisplay;i<currentDisplay+amountDisplay;i++)
             {
                 candleChart.Series[0].Points.AddXY(ChartData[i].DateTime, ChartData[i].High, ChartData[i].Low, ChartData[i].Open, ChartData[i].Close);
             }
