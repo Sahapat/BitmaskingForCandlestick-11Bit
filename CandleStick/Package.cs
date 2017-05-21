@@ -31,91 +31,197 @@ namespace CandleStick
 
     class Package
     {
-        public static decimal EncyptData(CandleStickData[] rawData)
+        public long Packing(long[] data)
         {
-            return 0;
+            long output = 0;
+            output = output | data[0];
+            output = output | data[1] << 11;
+            output = output | data[2] << 22;
+            output = output | data[3] << 33;
+            output = output | data[4] << 44;
+
+            return output;
         }
-        private byte checkDirection(double open,double close)
+        public long[] getMaskData(CandleStickData[] rawData)
         {
-            if (open > close) return (byte)TypeTrend.UP;
-            else return (byte)TypeTrend.DOWN;
+            double avgBody = 0;
+            for(int i = 0;i<rawData.Length;i++)
+            {
+                double body = Math.Abs(rawData[i].Open - rawData[i].Close);
+                avgBody += body;
+            }
+            avgBody /= rawData.Length;
+
+            double avgUpShadow = 0;
+            for(int i =0;i<rawData.Length;i++)
+            {
+                double UpShadow = rawData[i].High - Math.Max(rawData[i].Open, rawData[i].Close);
+                avgUpShadow += UpShadow;
+            }
+            avgUpShadow /= rawData.Length;
+
+            double avgLowShadow = 0;
+            for(int i =0;i<rawData.Length;i++)
+            {
+                double LowShadow = rawData[i].Low - Math.Min(rawData[i].Open, rawData[i].Close);
+                avgLowShadow += LowShadow;
+            }
+            avgLowShadow /= rawData.Length;
+
+            double SD_Body = 0;
+            for(int i =0;i<rawData.Length;i++)
+            {
+                SD_Body += (Math.Abs(rawData[i].Open - rawData[i].Close) - avgBody);
+            }
+            SD_Body /= rawData.Length;
+
+            double SD_Upshadow = 0;
+            for(int i = 0;i<rawData.Length;i++)
+            {
+                SD_Upshadow += (rawData[i].High - Math.Max(rawData[i].Open, rawData[i].Close)-avgUpShadow);
+            }
+            SD_Upshadow /= rawData.Length;
+
+            double SD_LowShadow = 0;
+            for(int i = 0;i<rawData.Length;i++)
+            {
+                SD_LowShadow += (rawData[i].Low - Math.Min(rawData[i].Open, rawData[i].Close) - avgLowShadow);
+            }
+
+            CandleStatus[] maskData = new CandleStatus[rawData.Length];
+            long[] output = new long[rawData.Length];
+            double[] Uscentroid = { -0.552689665062178, 0.615773990557240, 2.955830732137820 };
+            double[] LScentroid = { -0.479483091630587, 0.571950622887706, 3.379221758271600 };
+            double[] Bodycentroid = { -0.568489143858862, 0.492655804140342, 2.732240511936160 };
+            
+
+            for(int i =0;i<maskData.Length;i++)
+            {
+                maskData[i].Direction = checkDirection(rawData[i].Open, rawData[i].Close);
+                maskData[i].Body = statusBody(Math.Abs(rawData[i].Open - rawData[i].Close), SD_Body, avgBody, Bodycentroid);
+                maskData[i].UpperShadow = statusUpperShadow(Math.Max(rawData[i].Open, rawData[i].Close), SD_Upshadow, avgUpShadow, Uscentroid);
+                maskData[i].LowerShadow = statusLowerShadow(Math.Min(rawData[i].Open, rawData[i].Close), SD_LowShadow, avgLowShadow, LScentroid);
+
+                if(i != maskData.Length -2)
+                {
+                    maskData[i].GAP = checkGAP(rawData[i], rawData[i + 1]);
+                    maskData[i].HigherHigh = checkHH(rawData[i].Open, rawData[i].Close, rawData[i + 1].Open, rawData[i + 1].Close);
+                    maskData[i].LowerLow = checkLL(rawData[i].Open, rawData[i].Close, rawData[i + 1].Open, rawData[i + 1].Close);
+                }
+                else
+                {
+                    maskData[i].GAP = 0;
+                    maskData[i].HigherHigh = 0;
+                    maskData[i].LowerLow = 0;
+                }
+                if (i % 4 == 0)
+                {
+                    maskData[i].Volume = checkVolume(rawData[i].Volume, rawData[i - 1].Volume, rawData[i - 2].Volume, rawData[i - 3].Volume, rawData[i - 4].Volume);
+                }
+                else maskData[i].Volume = 0;
+            }
+
+            for(int i = 0;i<maskData.Length;i++)
+            {
+                output[i] = Mask(maskData[i]);
+            }
+
+            return output;
         }
-        private byte checkHH(double opendata1,double closedata1,double opendata2,double closedata2)
+        private long Mask(CandleStatus data)
+        {
+            long temp = 0;
+            temp = temp | data.Volume;
+            temp = temp | (data.LowerShadow<<1);
+            temp = temp | (data.Body << 3);
+            temp = temp | (data.UpperShadow << 5);
+            temp = temp | (data.GAP << 7);
+            temp = temp | (data.Direction << 8);
+            temp = temp | (data.LowerLow << 9);
+            temp = temp | (data.HigherHigh << 10);
+            return temp;
+        }
+        private short checkDirection(double open,double close)
+        {
+            if (open > close) return (short)TypeTrend.UP;
+            else return (short)TypeTrend.DOWN;
+        }
+        private short checkHH(double opendata1,double closedata1,double opendata2,double closedata2)
         {
             double maxData1 = Math.Max(opendata1, closedata1);
             double maxData2 = Math.Max(opendata2, closedata2);
 
-            if (maxData1 > maxData2) return (byte)TypeTrend.UP;
-            else return (byte)TypeTrend.DOWN;
+            if (maxData1 > maxData2) return (short)TypeTrend.UP;
+            else return (short)TypeTrend.DOWN;
         }
-        private byte checkLL(double opendata1,double closedata1,double opendata2,double closedata2)
+        private short checkLL(double opendata1,double closedata1,double opendata2,double closedata2)
         {
             double minData1 = Math.Min(opendata1, closedata1);
             double minData2 = Math.Min(opendata2, closedata2);
-            if (minData1 > minData2) return (byte)TypeTrend.UP;
-            else return (byte)TypeTrend.DOWN;
+            if (minData1 > minData2) return (short)TypeTrend.UP;
+            else return (short)TypeTrend.DOWN;
         }
-        private byte stutusUpperShadow(double US,double US_SD,double avgUpShadow,double[] UScentroid)
+        private short statusUpperShadow(double US,double US_SD,double avgUpShadow,double[] UScentroid)
         {
-            if (US == 0) return (byte)TypeCandle.NONE;
+            if (US == 0) return (short)TypeCandle.NONE;
             else
             {
                 double STD = (US - avgUpShadow) / US_SD;
                 if (STD < (UScentroid[0] + UScentroid[1]) / 2)
                 {
-                    return (byte)TypeCandle.LOW;
+                    return (short)TypeCandle.LOW;
                 }
                 else if (STD > (UScentroid[1] + UScentroid[2]) / 2)
                 {
-                    return (byte)TypeCandle.HIGH;
+                    return (short)TypeCandle.HIGH;
                 }
-                else return (byte)TypeCandle.MID;
+                else return (short)TypeCandle.MID;
             }
         }
-        private byte statusLowerShadow(double LS,double LS_SD,double avgLowShadow,double[] LScentroid)
+        private short statusLowerShadow(double LS,double LS_SD,double avgLowShadow,double[] LScentroid)
         {
-            if (LS == 0) return (byte)TypeCandle.NONE;
+            if (LS == 0) return (short)TypeCandle.NONE;
             else
             {
                 double STD = (LS - avgLowShadow) / LS_SD;
 
                 if (STD < (LScentroid[0] + LScentroid[1]) / 2)
                 {
-                    return (byte)TypeCandle.LOW;
+                    return (short)TypeCandle.LOW;
                 }
                 else if (STD > (LScentroid[1] + LScentroid[2]) / 2)
                 {
-                    return (byte)TypeCandle.HIGH;
+                    return (short)TypeCandle.HIGH;
                 }
-                else return (byte)TypeCandle.MID;
+                else return (short)TypeCandle.MID;
             }
         }
-        private byte statusBody(double Body,double Body_SD,double avgBody,double[] Bodycentroid)
+        private short statusBody(double Body,double Body_SD,double avgBody,double[] Bodycentroid)
         {
-            if (Body == 0) return (byte)TypeCandle.NONE;
+            if (Body == 0) return (short)TypeCandle.NONE;
             else
             {
                 double STD = (Body - avgBody) / Body_SD;
                 if (STD < (Bodycentroid[0] + Bodycentroid[1]) / 2)
                 {
-                    return (byte)TypeCandle.LOW;
+                    return (short)TypeCandle.LOW;
                 }
                 else if (STD > (Bodycentroid[1] + Bodycentroid[2]) / 2)
                 {
-                    return (byte)TypeCandle.HIGH;
+                    return (short)TypeCandle.HIGH;
                 }
-                else return (byte)TypeCandle.MID;
+                else return (short)TypeCandle.MID;
             }
         }
-        private byte checkGAP(CandleStickData currentData,CandleStickData nextData)
+        private short checkGAP(CandleStickData currentData,CandleStickData nextData)
         {
             if (Math.Max(currentData.Open, currentData.Close) < nextData.Low || Math.Min(currentData.Open, currentData.Close) > nextData.High)
             {
-                return (byte)CandleGAP.GAP;
+                return (short)CandleGAP.GAP;
             }
-            else return (byte)CandleGAP.NotGAP;
+            else return (short)CandleGAP.NotGAP;
         }
-        private byte checkVolume(double current,params double[] last)
+        private short checkVolume(double current,params double[] last)
         {
             double avgLast = 0;
 
@@ -127,9 +233,9 @@ namespace CandleStick
 
             if (current > avgLast)
             {
-                return (byte)CheckVolume.Peak;
+                return (short)CheckVolume.Peak;
             }
-            else return (byte)CheckVolume.NotPeak;
+            else return (short)CheckVolume.NotPeak;
         }
     }
 }
