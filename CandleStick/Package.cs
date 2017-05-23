@@ -102,8 +102,8 @@ namespace CandleStick
                 maskData[i].Body = statusBody(Math.Abs(rawData[i].Open - rawData[i].Close), SD_Body, avgBody, Bodycentroid);
                 maskData[i].UpperShadow = statusUpperShadow(Math.Max(rawData[i].Open, rawData[i].Close), SD_Upshadow, avgUpShadow, Uscentroid);
                 maskData[i].LowerShadow = statusLowerShadow(Math.Min(rawData[i].Open, rawData[i].Close), SD_LowShadow, avgLowShadow, LScentroid);
-
-                if(i != maskData.Length -2)
+                
+                if(i == maskData.Length -2)
                 {
                     maskData[i].GAP = checkGAP(rawData[i], rawData[i + 1]);
                     maskData[i].HigherHigh = checkHH(rawData[i].Open, rawData[i].Close, rawData[i + 1].Open, rawData[i + 1].Close);
@@ -115,9 +115,9 @@ namespace CandleStick
                     maskData[i].HigherHigh = 0;
                     maskData[i].LowerLow = 0;
                 }
-                if (i % 4 == 0)
+                if (i % 4 == 0 && i != 0)
                 {
-                    maskData[i].Volume = checkVolume(rawData[i].Volume, rawData[i - 1].Volume, rawData[i - 2].Volume, rawData[i - 3].Volume, rawData[i - 4].Volume);//bug
+                    maskData[i].Volume = checkVolume(rawData[i].Volume, rawData[i - 1].Volume, rawData[i - 2].Volume, rawData[i - 3].Volume, rawData[i - 4].Volume);
                 }
                 else maskData[i].Volume = 0;
             }

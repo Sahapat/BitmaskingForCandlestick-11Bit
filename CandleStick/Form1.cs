@@ -21,6 +21,8 @@ namespace CandleStick
         private int currentDisplay = 0;
         private const int nextDisplay = 5;
         private const int amountDisplay = 60;
+        private string[] items = {"4 VolumesAvg", "5 VolumesAvg" , "6 VolumesAvg" , "7 VolumesAvg" 
+                            , "8 VolumesAvg" ,"9 VolumesAvg" , "10 VolumesAvg" , "11 VolumesAvg" };
 
         public Form1()
         {
@@ -37,8 +39,36 @@ namespace CandleStick
                 Array.Resize<CandleNormalData>(ref NormalData, csvCandleData.RowLenght - 1);
                 SetChartData();
                 SetChart();
+                InitComboBox();
                 PackingData();
             }
+        }
+        private void Back_Click(object sender, EventArgs e)
+        {
+            if (csvCandleData.CsvData != null)
+            {
+                currentDisplay = (currentDisplay <= 0) ? currentDisplay = 0 : currentDisplay -= nextDisplay;
+                candleChart.Series[0].Points.Clear();
+                SetChart();
+            }
+        }
+        private void Next_Click(object sender, EventArgs e)
+        {
+            if (csvCandleData.CsvData != null)
+            {
+                currentDisplay = ((currentDisplay + nextDisplay) + amountDisplay > ChartData.Length) ? currentDisplay = ChartData.Length - amountDisplay : currentDisplay += nextDisplay;
+                candleChart.Series[0].Points.Clear();
+                SetChart();
+            }
+        }
+        private void Save_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void InitComboBox()
+        {
+            VolumeAvg.Items.AddRange(items);
         }
         private void InitChart()
         {
@@ -77,34 +107,8 @@ namespace CandleStick
         {
 
         }
-
-        private void Back_Click(object sender, EventArgs e)
-        {
-            if (csvCandleData.CsvData != null)
-            {
-                currentDisplay = (currentDisplay <= 0) ? currentDisplay = 0 : currentDisplay -= nextDisplay;
-                candleChart.Series[0].Points.Clear();
-                SetChart();
-            }
-        }
-
-        private void Next_Click(object sender, EventArgs e)
-        {
-            if (csvCandleData.CsvData != null)
-            {
-                currentDisplay = ((currentDisplay + nextDisplay) + amountDisplay > ChartData.Length) ? currentDisplay = ChartData.Length - amountDisplay : currentDisplay += nextDisplay;
-                candleChart.Series[0].Points.Clear();
-                SetChart();
-            }
-        }
         private void PackingData()
         {
-            Package pack = new Package();
-            var data = pack.getMaskData(ChartData);
-
-            string test = ToBinaryString(data[0]);
-
-            MessageBox.Show("Test : " + test);
 
         }
         private static string ToBinaryString(BigInteger data)
@@ -126,5 +130,7 @@ namespace CandleStick
 
             return base2.ToString();
         }
+
+ 
     }
 }
