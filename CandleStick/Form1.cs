@@ -8,8 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
-using System.IO;
 using System.Diagnostics;
+using System.Numerics;
+
 namespace CandleStick
 {
     public partial class Form1 : Form
@@ -98,6 +99,32 @@ namespace CandleStick
         }
         private void PackingData()
         {
+            Package pack = new Package();
+            var data = pack.getMaskData(ChartData);
+
+            string test = ToBinaryString(data[0]);
+
+            MessageBox.Show("Test : " + test);
+
+        }
+        private static string ToBinaryString(BigInteger data)
+        {
+            var bytes = data.ToByteArray();
+            var idx = bytes.Length - 1;
+
+            var base2 = new StringBuilder(bytes.Length * 8);
+            var binary = Convert.ToString(bytes[idx], 2);
+            if (binary[0] != '0' && data.Sign == 1)
+            {
+                base2.Append('0');
+            }
+            base2.Append(binary);
+            for (idx--; idx >= 0; idx--)
+            {
+                base2.Append(Convert.ToString(bytes[idx], 2).PadLeft(8, '0'));
+            }
+
+            return base2.ToString();
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Numerics;
 
 namespace CandleStick
 {
@@ -31,9 +32,9 @@ namespace CandleStick
 
     class Package
     {
-        public long Packing(long[] data)
+        public BigInteger Packing(BigInteger[] data)
         {
-            long output = 0;
+            BigInteger output = 0;
             output = output | data[0];
             output = output | data[1] << 11;
             output = output | data[2] << 22;
@@ -42,7 +43,7 @@ namespace CandleStick
 
             return output;
         }
-        public long[] getMaskData(CandleStickData[] rawData)
+        public BigInteger[] getMaskData(CandleStickData[] rawData)
         {
             double avgBody = 0;
             for(int i = 0;i<rawData.Length;i++)
@@ -89,7 +90,7 @@ namespace CandleStick
             }
 
             CandleStatus[] maskData = new CandleStatus[rawData.Length];
-            long[] output = new long[rawData.Length];
+            BigInteger[] output = new BigInteger[rawData.Length];
             double[] Uscentroid = { -0.552689665062178, 0.615773990557240, 2.955830732137820 };
             double[] LScentroid = { -0.479483091630587, 0.571950622887706, 3.379221758271600 };
             double[] Bodycentroid = { -0.568489143858862, 0.492655804140342, 2.732240511936160 };
@@ -116,7 +117,7 @@ namespace CandleStick
                 }
                 if (i % 4 == 0)
                 {
-                    maskData[i].Volume = checkVolume(rawData[i].Volume, rawData[i - 1].Volume, rawData[i - 2].Volume, rawData[i - 3].Volume, rawData[i - 4].Volume);
+                    maskData[i].Volume = checkVolume(rawData[i].Volume, rawData[i - 1].Volume, rawData[i - 2].Volume, rawData[i - 3].Volume, rawData[i - 4].Volume);//bug
                 }
                 else maskData[i].Volume = 0;
             }
@@ -128,9 +129,9 @@ namespace CandleStick
 
             return output;
         }
-        private long Mask(CandleStatus data)
+        private BigInteger Mask(CandleStatus data)
         {
-            long temp = 0;
+            BigInteger temp = 0;
             temp = temp | data.Volume;
             temp = temp | (data.LowerShadow<<1);
             temp = temp | (data.Body << 3);
