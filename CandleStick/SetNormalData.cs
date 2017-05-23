@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CandleStick
 {
-    class MakeNormalData
+    class SetNormalData
     {
 
     }
