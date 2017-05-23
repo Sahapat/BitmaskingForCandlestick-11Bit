@@ -35,15 +35,15 @@ namespace CandleStick
         public BigInteger Packing(BigInteger[] data)
         {
             BigInteger output = 0;
-            output = output | data[0];
-            output = output | data[1] << 11;
-            output = output | data[2] << 22;
-            output = output | data[3] << 33;
-            output = output | data[4] << 44;
-
+            byte shift = 0;
+            for(int i =0;i<data.Length;i++)
+            {
+                output = output | data[i] << shift;
+                shift += 11;
+            }
             return output;
         }
-        public BigInteger[] getMaskData(CandleStickData[] rawData)
+        public BigInteger[] getMaskData(CandleStickData[] rawData, int DayOfAvgVolume)
         {
             double avgBody = 0;
             for(int i = 0;i<rawData.Length;i++)
@@ -115,7 +115,7 @@ namespace CandleStick
                     maskData[i].HigherHigh = 0;
                     maskData[i].LowerLow = 0;
                 }
-                if (i % 4 == 0 && i != 0)
+                if (i % DayOfAvgVolume == 0 && i != 0)
                 {
                     maskData[i].Volume = checkVolume(rawData[i].Volume, rawData[i - 1].Volume, rawData[i - 2].Volume, rawData[i - 3].Volume, rawData[i - 4].Volume);
                 }
@@ -221,7 +221,7 @@ namespace CandleStick
                 return (short)CandleGAP.GAP;
             }
             else return (short)CandleGAP.NotGAP;
-        }
+        }//uncheck
         private short checkVolume(double current,params double[] last)
         {
             double avgLast = 0;
