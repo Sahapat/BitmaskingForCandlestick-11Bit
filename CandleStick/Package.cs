@@ -126,7 +126,7 @@ namespace CandleStick
             {
                 output[i] = Mask(maskData[i]);
             }
-
+            System.Windows.Forms.MessageBox.Show("maskdata" + maskData[11].Volume);
             return output;
         }
         private BigInteger Mask(CandleStatus data)
@@ -144,9 +144,9 @@ namespace CandleStick
         }
         private short checkDirection(double open,double close)
         {
-            if (open > close) return (short)TypeTrend.UP;
+            if (open < close) return (short)TypeTrend.UP;
             else return (short)TypeTrend.DOWN;
-        }
+        }//check
         private short checkHH(double opendata1,double closedata1,double opendata2,double closedata2)
         {
             double maxData1 = Math.Max(opendata1, closedata1);
@@ -154,14 +154,14 @@ namespace CandleStick
 
             if (maxData1 > maxData2) return (short)TypeTrend.UP;
             else return (short)TypeTrend.DOWN;
-        }
+        }//Logic error
         private short checkLL(double opendata1,double closedata1,double opendata2,double closedata2)
         {
             double minData1 = Math.Min(opendata1, closedata1);
             double minData2 = Math.Min(opendata2, closedata2);
             if (minData1 > minData2) return (short)TypeTrend.UP;
             else return (short)TypeTrend.DOWN;
-        }
+        }//Logic error
         private short statusUpperShadow(double US,double US_SD,double avgUpShadow,double[] UScentroid)
         {
             if (US == 0) return (short)TypeCandle.NONE;
@@ -178,7 +178,7 @@ namespace CandleStick
                 }
                 else return (short)TypeCandle.MID;
             }
-        }
+        }//Logic error
         private short statusLowerShadow(double LS,double LS_SD,double avgLowShadow,double[] LScentroid)
         {
             if (LS == 0) return (short)TypeCandle.NONE;
@@ -196,7 +196,7 @@ namespace CandleStick
                 }
                 else return (short)TypeCandle.MID;
             }
-        }
+        }//Logic error
         private short statusBody(double Body,double Body_SD,double avgBody,double[] Bodycentroid)
         {
             if (Body == 0) return (short)TypeCandle.NONE;
@@ -213,7 +213,7 @@ namespace CandleStick
                 }
                 else return (short)TypeCandle.MID;
             }
-        }
+        }//check
         private short checkGAP(CandleStickData currentData,CandleStickData nextData)
         {
             if (Math.Max(currentData.Open, currentData.Close) < nextData.Low || Math.Min(currentData.Open, currentData.Close) > nextData.High)
@@ -237,6 +237,6 @@ namespace CandleStick
                 return (short)CheckVolume.Peak;
             }
             else return (short)CheckVolume.NotPeak;
-        }
+        }//check
     }
 }

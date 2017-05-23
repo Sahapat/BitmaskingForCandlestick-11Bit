@@ -66,9 +66,9 @@ namespace CandleStick
                 Application.Exit();
             }
         }
-        public void WriteData(string path,string filename,string data)
+        public void WriteData(string path,string filename,string[] Column,string[] Row,string data)
         {
-            StringBuilder csvData = new StringBuilder();
+
         }
         public double GetColumnData(int selectColumn,int selectRow)
         {

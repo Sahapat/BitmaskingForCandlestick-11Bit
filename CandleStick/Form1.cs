@@ -28,9 +28,13 @@ namespace CandleStick
         {
             InitializeComponent();
             InitChart();
+            VolumeAvg.Visible = false;
+            Save.Visible = false;
         }
         private void GetData_Click(object sender, EventArgs e)
         {
+            string filter = "CSV file (*.csv)|*.csv";
+            getCandleData.Filter = filter;
             DialogResult result = getCandleData.ShowDialog();
             if(result == DialogResult.OK)
             {
@@ -63,12 +67,22 @@ namespace CandleStick
         }
         private void Save_Click(object sender, EventArgs e)
         {
+            string select = VolumeAvg.Text;
+            string filter = "CSV file (*.csv)|*.csv";
+            saveCsv.Filter = filter;
+            DialogResult result = saveCsv.ShowDialog();
+            if(result == DialogResult.OK)
+            {
 
+            }
         }
 
         private void InitComboBox()
         {
+            Save.Visible = true;
+            VolumeAvg.Visible = true;
             VolumeAvg.Items.AddRange(items);
+            VolumeAvg.DropDownStyle = ComboBoxStyle.DropDownList;
         }
         private void InitChart()
         {
@@ -83,6 +97,18 @@ namespace CandleStick
             candleChart.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Gold;
             candleChart.ChartAreas[0].BackColor = Color.Black;
             candleChart.BackColor = Color.Gray;
+
+            normalChart.Series.Clear();
+            normalChart.Series.Add("Series").ChartType = SeriesChartType.Candlestick;
+            normalChart.Series[0]["PointWidth"] = "0.65";
+            normalChart.Series[0]["PriceUpColor"] = "Lime";
+            normalChart.Series[0]["PriceDownColor"] = "Red";
+            normalChart.ChartAreas[0].AxisX.MajorGrid.LineColor = Color.Gray;
+            normalChart.ChartAreas[0].AxisY.MajorGrid.LineColor = Color.Gray;
+            normalChart.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Gold;
+            normalChart.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Gold;
+            normalChart.ChartAreas[0].BackColor = Color.Black;
+            normalChart.BackColor = Color.Gray;
         }
         private void SetChart()
         {
@@ -109,7 +135,7 @@ namespace CandleStick
         }
         private void PackingData()
         {
-
+            Package package = new Package();
         }
         private static string ToBinaryString(BigInteger data)
         {
