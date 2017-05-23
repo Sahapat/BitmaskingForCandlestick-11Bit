@@ -23,7 +23,7 @@ namespace CandleStick
         public float Low;
         public float Open;
         public float Close;
-    }
+    };
     struct CandleStatus
     {
         public short Direction;
@@ -34,5 +34,5 @@ namespace CandleStick
         public short Body;
         public short GAP;
         public short Volume;
-    }
+    };
 }
