@@ -66,9 +66,19 @@ namespace CandleStick
                 Application.Exit();
             }
         }
-        public void WriteData(string path,string filename,string[] Column,string[] Row,string data)
+        public void WriteData(string path,string data)
         {
-
+            try
+            {
+                StreamWriter write = new StreamWriter(path);
+                write.Write(data);
+                write.Close();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                Application.Exit();
+            }
         }
         public double GetColumnData(int selectColumn,int selectRow)
         {
