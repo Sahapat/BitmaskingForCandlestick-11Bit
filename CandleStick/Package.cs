@@ -91,7 +91,6 @@ namespace CandleStick
             SD_Body = GetSD(body);
             SD_LowShadow = GetSD(LowShadow);
             SD_UpShadow = GetSD(UpShadow);
-            //System.Windows.Forms.MessageBox.Show("Ushadow : " + UpShadow[1]+ "\n" + "SD Ushadow : " + SD_UpShadow + "\n" + "Avg Ushadow : " + avgUpShadow);
             
             //Set property
             for(int i =0;i<maskData.Length;i++)
@@ -100,6 +99,13 @@ namespace CandleStick
                 maskData[i].Body = statusBody(body[i], SD_Body, avgBody, Bodycentroid);
                 maskData[i].LowerShadow = statusLowerShadow(LowShadow[i], SD_LowShadow, avgLowShadow, LScentroid);
                 maskData[i].UpperShadow = statusUpperShadow(UpShadow[i], SD_UpShadow, avgUpShadow, Uscentroid);
+
+                if(i != 0)
+                {
+                    maskData[i].HigherHigh = checkHH(rawData[i], rawData[i - 1]);
+                    maskData[i].LowerLow = checkLL(rawData[i], rawData[i - 1]);
+                    maskData[i].GAP = checkLL(rawData[i], rawData[i - 1]);
+                }
                 
                 if (i % DayOfAvgVolume == 0 && i != 0)
                 {
@@ -107,29 +113,12 @@ namespace CandleStick
                 }
                 else maskData[i].Volume = 0;
             }
-            //System.Windows.Forms.MessageBox.Show("Ushadow : " + maskData[1].LowerShadow);
+            //System.Windows.Forms.MessageBox.Show("GAP check : "+maskData[148].GAP);
             for (int i = 0;i<maskData.Length;i++)
             {
-                output[i] = Mask(maskData[i]);
+                output[i] = Mask(maskData[i]);  
             }
             return output;
-        }
-        private double GetSD(double[] data)
-        {
-            int size = data.Length;
-            double temp1 = 0;
-            double temp2 = 0;
-            double SD = 0;
-
-            for(int i =0;i<size;i++)
-            {
-                temp1 += Math.Pow(data[i], 2);
-                temp2 += data[i];
-            }
-
-            SD = ((size * temp1) - Math.Pow(temp2, 2))/(size * (size-1));
-            SD = Math.Sqrt(SD);
-            return SD;
         }
         private BigInteger Mask(CandleStatus data)
         {
@@ -144,17 +133,36 @@ namespace CandleStick
             temp = temp | (data.HigherHigh << 10);
             return temp;
         }
+        private double GetSD(double[] data)
+        {
+            int size = data.Length;
+            double temp1 = 0;
+            double temp2 = 0;
+            double SD = 0;
+
+            for (int i = 0; i < size; i++)
+            {
+                temp1 += Math.Pow(data[i], 2);
+                temp2 += data[i];
+            }
+
+            SD = ((size * temp1) - Math.Pow(temp2, 2)) / (size * (size - 1));
+            SD = Math.Sqrt(SD);
+            return SD;
+        }
         private short checkDirection(double open,double close)
         {
             if (open < close) return (short)TypeTrend.UP;
             else return (short)TypeTrend.DOWN;
         }//check
-        /*private short checkHH(CandleStickData current,CandleStickData before)
+        private short checkHH(CandleStickData current,CandleStickData before)
         {
+            return 1;
         }//Logic error
         private short checkLL(CandleStickData current, CandleStickData before)
         {
-        }//Logic error*/
+            return 1;
+        }//Logic error
         private short statusUpperShadow(double US,double US_SD,double avgUpShadow,double[] UScentroid)
         {
             if (US == 0) return (short)TypeCandle.NONE;
@@ -189,7 +197,7 @@ namespace CandleStick
                 }
                 else return (short)TypeCandle.MID;
             }
-        }//Logic error
+        }//check
         private short statusBody(double Body,double Body_SD,double avgBody,double[] Bodycentroid)
         {
             if (Body == 0) return (short)TypeCandle.NONE;
@@ -209,7 +217,8 @@ namespace CandleStick
         }//check
         private short checkGAP(CandleStickData currentData,CandleStickData beforeData)
         {
-            if (Math.Max(currentData.Open, currentData.Close) < beforeData.Low || Math.Min(currentData.Open, currentData.Close) > beforeData.High)
+            double maxBodyBefore = Math.Max(beforeData.Open, beforeData.Close);
+            if (maxBodyBefore < currentData.Open)
             {
                 return (short)CandleGAP.GAP;
             }
