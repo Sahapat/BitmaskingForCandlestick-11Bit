@@ -124,6 +124,7 @@
             this.VolumeAvg.Name = "VolumeAvg";
             this.VolumeAvg.Size = new System.Drawing.Size(148, 28);
             this.VolumeAvg.TabIndex = 7;
+            this.VolumeAvg.SelectedIndexChanged += new System.EventHandler(this.VolumeAvg_SelectedIndexChanged);
             // 
             // Save
             // 

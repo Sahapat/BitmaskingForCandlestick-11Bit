@@ -18,8 +18,8 @@ namespace CandleStick
         private CsvManager csvCandleData = new CsvManager();
         private CandleStickData[] RawData = new CandleStickData[0];
         private CandleNormalData[] NormalData = new CandleNormalData[0];
-        private BigInteger[] BinaryCandleProperty1 = new BigInteger[0];
-        private BigInteger[] BinaryPackage1 = new BigInteger[0];
+        private BigInteger[] BinaryCandleProperty = new BigInteger[0];
+        private BigInteger[] BinaryPackage = new BigInteger[0];
         private int currentDisplay = 0;
         private const int nextDisplay = 5;
         private const int amountDisplay = 60;
@@ -46,7 +46,6 @@ namespace CandleStick
                 SetRawData();
                 SetChart();
                 InitComboBox();
-                PackingData();
             }
         }
         private void Back_Click(object sender, EventArgs e)
@@ -69,7 +68,6 @@ namespace CandleStick
         }
         private void Save_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("test : " + ToBinaryString(BinaryPackage1[0]));
             string select = VolumeAvg.Text;
             if (select == string.Empty) return;
             string filter = "CSV file (*.csv)|*.csv";
@@ -78,162 +76,69 @@ namespace CandleStick
             if(result == DialogResult.OK)
             {
                 string path = saveCsv.FileName;
-                StringBuilder data = new StringBuilder();
-                switch (select)
-                {
-                    case "4 VolumesAvg":
-                        data.Append("CandleStickProperty,Package,BinaryPackage1");
-                        data.AppendLine();
-                        for (int i = 0; i < BinaryCandleProperty1.Length; i++)
-                        {
-                            if (i <= BinaryPackage1.Length - 1)
-                            {
-                                data.AppendFormat("{0},{1},{2}", BinaryCandleProperty1[i], BinaryPackage1[i], ToBinaryString(BinaryPackage1[i]));
-                                data.AppendLine();
-                            }
-                            else
-                            {
-                                data.AppendFormat("{0},{1},{2}", BinaryCandleProperty1[i], " ", " ");
-                                data.AppendLine();
-                            }
-                        }
-                        csvCandleData.WriteData(path, data.ToString());
-                        break;
-                    case "5 VolumesAvg":
-                        data.Append("CandleStickProperty,Package,BinaryPackage1");
-                        data.AppendLine();
-                        for (int i = 0; i < BinaryCandleProperty1.Length; i++)
-                        {
-                            if (i <= BinaryPackage1.Length - 1)
-                            {
-                                data.AppendFormat("{0},{1},{2}", BinaryCandleProperty1[i], BinaryPackage1[i], ToBinaryString(BinaryPackage1[i]));
-                                data.AppendLine();
-                            }
-                            else
-                            {
-                                data.AppendFormat("{0},{1},{2}", BinaryCandleProperty1[i], " ", " ");
-                                data.AppendLine();
-                            }
-                        }
-                        csvCandleData.WriteData(path, data.ToString());
-                        break;
-                    case "6 VolumesAvg":
-                        data.Append("CandleStickProperty,Package,BinaryPackage1");
-                        data.AppendLine();
-                        for (int i = 0; i < BinaryCandleProperty1.Length; i++)
-                        {
-                            if (i <= BinaryPackage1.Length - 1)
-                            {
-                                data.AppendFormat("{0},{1},{2}", BinaryCandleProperty1[i], BinaryPackage1[i], ToBinaryString(BinaryPackage1[i]));
-                                data.AppendLine();
-                            }
-                            else
-                            {
-                                data.AppendFormat("{0},{1},{2}", BinaryCandleProperty1[i], " ", " ");
-                                data.AppendLine();
-                            }
-                        }
-                        csvCandleData.WriteData(path, data.ToString());
-                        break;
-                    case "7 VolumesAvg":
-                        data.Append("CandleStickProperty,Package,BinaryPackage1");
-                        data.AppendLine();
-                        for (int i = 0; i < BinaryCandleProperty1.Length; i++)
-                        {
-                            if (i <= BinaryPackage1.Length - 1)
-                            {
-                                data.AppendFormat("{0},{1},{2}", BinaryCandleProperty1[i], BinaryPackage1[i], ToBinaryString(BinaryPackage1[i]));
-                                data.AppendLine();
-                            }
-                            else
-                            {
-                                data.AppendFormat("{0},{1},{2}", BinaryCandleProperty1[i], " ", " ");
-                                data.AppendLine();
-                            }
-                        }
-                        csvCandleData.WriteData(path, data.ToString());
-                        break;
-                    case "8 VolumesAvg":
-                        data.Append("CandleStickProperty,Package,BinaryPackage1");
-                        data.AppendLine();
-                        for (int i = 0; i < BinaryCandleProperty1.Length; i++)
-                        {
-                            if (i <= BinaryPackage1.Length - 1)
-                            {
-                                data.AppendFormat("{0},{1},{2}", BinaryCandleProperty1[i], BinaryPackage1[i], ToBinaryString(BinaryPackage1[i]));
-                                data.AppendLine();
-                            }
-                            else
-                            {
-                                data.AppendFormat("{0},{1},{2}", BinaryCandleProperty1[i], " ", " ");
-                                data.AppendLine();
-                            }
-                        }
-                        csvCandleData.WriteData(path, data.ToString());
-                        break;
-                    case "9 VolumesAvg":
-                        data.Append("CandleStickProperty,Package,BinaryPackage1");
-                        data.AppendLine();
-                        for (int i = 0; i < BinaryCandleProperty1.Length; i++)
-                        {
-                            if (i <= BinaryPackage1.Length - 1)
-                            {
-                                data.AppendFormat("{0},{1},{2}", BinaryCandleProperty1[i], BinaryPackage1[i], ToBinaryString(BinaryPackage1[i]));
-                                data.AppendLine();
-                            }
-                            else
-                            {
-                                data.AppendFormat("{0},{1},{2}", BinaryCandleProperty1[i], " ", " ");
-                                data.AppendLine();
-                            }
-                        }
-                        csvCandleData.WriteData(path, data.ToString());
-                        break;
-                    case "10 VolumesAvg":
-                        data.Append("CandleStickProperty,Package,BinaryPackage1");
-                        data.AppendLine();
-                        for (int i = 0; i < BinaryCandleProperty1.Length; i++)
-                        {
-                            if (i <= BinaryPackage1.Length - 1)
-                            {
-                                data.AppendFormat("{0},{1},{2}", BinaryCandleProperty1[i], BinaryPackage1[i], ToBinaryString(BinaryPackage1[i]));
-                                data.AppendLine();
-                            }
-                            else
-                            {
-                                data.AppendFormat("{0},{1},{2}", BinaryCandleProperty1[i], " ", " ");
-                                data.AppendLine();
-                            }
-                        }
-                        csvCandleData.WriteData(path, data.ToString());
-                        break;
-                    case "11 VolumesAvg":
-                        data.Append("CandleStickProperty,Package,BinaryPackage1");
-                        data.AppendLine();
-                        for (int i = 0; i < BinaryCandleProperty1.Length; i++)
-                        {
-                            if (i <= BinaryPackage1.Length - 1)
-                            {
-                                data.AppendFormat("{0},{1},{2}", BinaryCandleProperty1[i], BinaryPackage1[i], ToBinaryString(BinaryPackage1[i]));
-                                data.AppendLine();
-                            }
-                            else
-                            {
-                                data.AppendFormat("{0},{1},{2}", BinaryCandleProperty1[i], " ", " ");
-                                data.AppendLine();
-                            }
-                        }
-                        csvCandleData.WriteData(path, data.ToString());
-                        break;
-                }
+                string outData = GetOutputData();
+                csvCandleData.WriteData(path, outData);
             }
         }
-
+        private void VolumeAvg_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            PackingData();
+        }
+        private string GetOutputData()
+        {
+            StringBuilder data = new StringBuilder();
+            data.Append("RawCandleProperty,BinaryCandleProperty,BinaryPackage");
+            data.AppendLine();
+            for(int i = 0;i<BinaryCandleProperty.Length;i++)
+            {
+                string RawCandleProperty = BinaryCandleProperty[i].ToString();
+                string BinaryProperty = ToBinaryString(BinaryCandleProperty[i]);
+                while (BinaryProperty.Length != 11)
+                {
+                    if (BinaryProperty.Length > 11)
+                    {
+                        BinaryProperty.Remove(0);
+                    }
+                    else
+                    {
+                        string temp = "0";
+                        temp += BinaryProperty;
+                        BinaryProperty = temp;
+                    }
+                }
+                if (i < BinaryPackage.Length)
+                {
+                    string BinaryPack = ToBinaryString(BinaryPackage[i]);
+                    while (BinaryPack.Length != 121)
+                    {
+                        if (BinaryPack.Length > 121)
+                        {
+                            BinaryPack.Remove(0);
+                        }
+                        else
+                        {
+                            string temp = "0";
+                            temp += BinaryPack;
+                            BinaryPack = temp;
+                        }
+                    }
+                    data.AppendFormat("{0},{1},{2}", RawCandleProperty, BinaryProperty, BinaryPack);
+                    data.AppendLine();
+                }
+                else
+                {
+                    data.AppendFormat("{0},{1},{2}", RawCandleProperty, BinaryProperty,string.Empty);
+                    data.AppendLine();
+                }
+            }
+            return data.ToString();
+        }
         private void InitComboBox()
         {
             Save.Visible = true;
             VolumeAvg.Visible = true;
             VolumeAvg.Items.AddRange(items);
+            VolumeAvg.SelectedIndex = 0;
             VolumeAvg.DropDownStyle = ComboBoxStyle.DropDownList;
         }
         private void InitChart()
@@ -287,8 +192,39 @@ namespace CandleStick
         }
         private void PackingData()
         {
+            int DayOfAvgVolume = 0;
+            switch(VolumeAvg.Text)
+            {
+                case "4 VolumesAvg":
+                    DayOfAvgVolume = 4;
+                    break;
+                case "5 VolumesAvg":
+                    DayOfAvgVolume = 5;
+                    break;
+                case "6 VolumesAvg":
+                    DayOfAvgVolume = 6;
+                    break;
+                case "7 VolumesAvg":
+                    DayOfAvgVolume = 7;
+                    break;
+                case "8 VolumesAvg":
+                    DayOfAvgVolume = 8;
+                    break;
+                case "9 VolumesAvg":
+                    DayOfAvgVolume = 9;
+                    break;
+                case "10 VolumesAvg":
+                    DayOfAvgVolume = 10;
+                    break;
+                case "11 VolumesAvg":
+                    DayOfAvgVolume = 11;
+                    break;
+                default:
+                    DayOfAvgVolume = 4;
+                    break;
+            }
             Package package = new Package();
-            var CandleProperty = package.getMaskData(RawData,4);
+            var CandleProperty = package.getMaskData(RawData,DayOfAvgVolume);
 
             List<BigInteger> temp = new List<BigInteger>();
             List<BigInteger[]> InputData = new List<BigInteger[]>();
@@ -310,27 +246,26 @@ namespace CandleStick
                 }
                 count++;
             }
-            Array.Resize<BigInteger>(ref BinaryPackage1, InputData.Count);
-            Array.Resize<BigInteger>(ref BinaryCandleProperty1, CandleProperty.Length);
+            Array.Resize<BigInteger>(ref BinaryPackage, InputData.Count);
+            Array.Resize<BigInteger>(ref BinaryCandleProperty, CandleProperty.Length);
 
-            BinaryCandleProperty1 = CandleProperty;
+            BinaryCandleProperty = CandleProperty;
             
             for(int i =0;i<InputData.Count;i++)
             {
-                BinaryPackage1[i] = package.Packing(InputData[i]);
+                BinaryPackage[i] = package.Packing(InputData[i]);
             }
 ;        }
         private static string ToBinaryString(BigInteger data)
         {
             var bytes = data.ToByteArray();
             var idx = bytes.Length - 1;
-
             var base2 = new StringBuilder(bytes.Length * 8);
             var binary = Convert.ToString(bytes[idx], 2);
-            if (binary[0] != '0' && data.Sign == 1)
+            /*if (binary[0] != '0' && data.Sign == 1)
             {
                 base2.Append('0');
-            }
+            }*/
             base2.Append(binary);
             for (idx--; idx >= 0; idx--)
             {
@@ -339,7 +274,5 @@ namespace CandleStick
 
             return base2.ToString();
         }
-
- 
     }
 }
