@@ -223,7 +223,7 @@ namespace CandleStick
                 return (short)CandleGAP.GAP;
             }
             else return (short)CandleGAP.NotGAP;
-        }//uncheck
+        }//check
         private short checkVolume(double current,params double[] last)
         {
             double avgLast = 0;
