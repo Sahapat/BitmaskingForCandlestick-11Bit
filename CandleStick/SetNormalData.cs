@@ -8,6 +8,25 @@ namespace CandleStick
 {
     class SetNormalData
     {
+        public void inputCandleStatus()
+        {
 
+        }
+        public short getHigh()
+        {
+            return 0;
+        }
+        public short getLow()
+        {
+            return 0;
+        }
+        public short getOpen()
+        {
+            return 0;
+        }
+        public short getClose()
+        {
+            return 0;
+        }
     }
 }
