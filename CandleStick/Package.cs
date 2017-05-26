@@ -32,6 +32,34 @@ namespace CandleStick
 
     class Package
     {
+        public static CandleStatus[] UnPack(BigInteger package,int PackageCount)
+        {
+            int packageKey = 2047;
+            CandleStatus[] output = new CandleStatus[PackageCount];
+            BigInteger[] singleData = new BigInteger[PackageCount];
+            
+            byte getSingleDatashift = 0;
+            for(int i =0;i<PackageCount;i++)
+            {
+                singleData[i] = (package & (packageKey<<getSingleDatashift))>>getSingleDatashift;
+                getSingleDatashift += 11;
+            }
+
+            byte Key1 = 1;
+            byte Key2 = 3; 
+            for(int i =0;i<PackageCount;i++)
+            {
+                output[i].Volume = (short)(singleData[i] & Key1);
+                output[i].LowerShadow = (short)((singleData[i] & Key2 << 1)>>1);
+                output[i].Body = (short)((singleData[i] & Key2 << 3)>>3);
+                output[i].UpperShadow = (short)((singleData[i] & Key2 << 5) >> 5);
+                output[i].GAP = (short)((singleData[i] & Key1 << 7) >> 7);
+                output[i].Direction = (short)((singleData[i] & Key1 << 8) >> 8);
+                output[i].LowerLow = (short)((singleData[i] & Key1 << 9) >> 9);
+                output[i].HigherHigh = (short)((singleData[i] & Key1 << 10) >> 10);
+            }
+            return output;
+        }
         public BigInteger Packing(BigInteger[] data)
         {
             BigInteger output = 0;
@@ -113,7 +141,7 @@ namespace CandleStick
                 }
                 else maskData[i].Volume = 0;
             }
-            //System.Windows.Forms.MessageBox.Show("GAP check : "+maskData[148].GAP);
+            
             for (int i = 0;i<maskData.Length;i++)
             {
                 output[i] = Mask(maskData[i]);  
@@ -157,11 +185,25 @@ namespace CandleStick
         }//check
         private short checkHH(CandleStickData current,CandleStickData before)
         {
-            return 1;
+            double currentMax = Math.Max(current.Open, current.Close);
+            double beforeMax = Math.Max(before.Open, before.Close);
+
+            if (currentMax > beforeMax)
+            {
+                return (short)TypeTrend.UP;
+            }
+            else return (short)TypeTrend.DOWN;
         }//Logic error
         private short checkLL(CandleStickData current, CandleStickData before)
         {
-            return 1;
+            double currentMin = Math.Min(current.Open, current.Close);
+            double beforeMin = Math.Min(before.Open, before.Close);
+
+            if (currentMin > beforeMin)
+            {
+                return (short)TypeTrend.UP;
+            }
+            else return (short)TypeTrend.DOWN;
         }//Logic error
         private short statusUpperShadow(double US,double US_SD,double avgUpShadow,double[] UScentroid)
         {
@@ -218,12 +260,12 @@ namespace CandleStick
         private short checkGAP(CandleStickData currentData,CandleStickData beforeData)
         {
             double maxBodyBefore = Math.Max(beforeData.Open, beforeData.Close);
-            if (maxBodyBefore < currentData.Open)
+            if (maxBodyBefore < currentData.Open )
             {
                 return (short)CandleGAP.GAP;
             }
             else return (short)CandleGAP.NotGAP;
-        }//check
+        }//logic error
         private short checkVolume(double current,params double[] last)
         {
             double avgLast = 0;
