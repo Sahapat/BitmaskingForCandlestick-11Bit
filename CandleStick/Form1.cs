@@ -122,12 +122,12 @@ namespace CandleStick
                             BinaryPack = temp;
                         }
                     }
-                    data.AppendFormat("{0},{1},{2}", RawCandleProperty, BinaryProperty, BinaryPack);
+                    data.AppendFormat("\"{0}\",\"{1}\",\"{2}\"", RawCandleProperty, BinaryProperty, BinaryPack);
                     data.AppendLine();
                 }
                 else
                 {
-                    data.AppendFormat("{0},{1},{2}", RawCandleProperty, BinaryProperty,string.Empty);
+                    data.AppendFormat("\"{0}\",\"{1}\",\"{2}\"", RawCandleProperty, BinaryProperty,string.Empty);
                     data.AppendLine();
                 }
             }
@@ -262,10 +262,6 @@ namespace CandleStick
             var idx = bytes.Length - 1;
             var base2 = new StringBuilder(bytes.Length * 8);
             var binary = Convert.ToString(bytes[idx], 2);
-            /*if (binary[0] != '0' && data.Sign == 1)
-            {
-                base2.Append('0');
-            }*/
             base2.Append(binary);
             for (idx--; idx >= 0; idx--)
             {
