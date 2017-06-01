@@ -259,11 +259,17 @@ namespace CandleStick
         }//check
         private short checkGAP(CandleStickData currentData,CandleStickData beforeData)
         {
-            double maxBodyBefore = Math.Max(beforeData.Open, beforeData.Close);
+            /*double maxBodyBefore = Math.Max(beforeData.Open, beforeData.Close);
             if (maxBodyBefore < currentData.Open )
             {
                 return (short)CandleGAP.GAP;
             }
+            else return (short)CandleGAP.NotGAP;*/
+            if (currentData.Low > beforeData.High)
+            {
+                return (short)CandleGAP.GAP;
+            }
+
             else return (short)CandleGAP.NotGAP;
         }//logic error
         private short checkVolume(double current,params double[] last)

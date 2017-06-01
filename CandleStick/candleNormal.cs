@@ -8,5 +8,6 @@ namespace CandleStick
 {
     class candleNormal
     {
+
     }
 }
