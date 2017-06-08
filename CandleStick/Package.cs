@@ -129,12 +129,8 @@ namespace CandleStick
                     maskData[i].LowerLow = checkLL(rawData[i], rawData[i - 1]);
                     maskData[i].GAP = checkLL(rawData[i], rawData[i - 1]);
                 }
-                
-                if (i % DayOfAvgVolume == 0 && i != 0)
-                {
-                    maskData[i].Volume = checkVolume(rawData[i].Volume, rawData[i - 1].Volume, rawData[i - 2].Volume, rawData[i - 3].Volume, rawData[i - 4].Volume);
-                }
-                else maskData[i].Volume = 0;
+                //Volume
+
             }
             
             for (int i = 0;i<maskData.Length;i++)
