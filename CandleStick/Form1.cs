@@ -17,13 +17,13 @@ namespace CandleStick
     {
         private CsvManager csvCandleData = new CsvManager();
         private CandleStickData[] RawData = new CandleStickData[0];
-        private CandleNormalData[] NormalData = new CandleNormalData[0];
         private BigInteger[] BinaryCandleProperty = new BigInteger[0];
-        private BigInteger[] BinaryPackage = new BigInteger[0];
+        private BigInteger[] BitPack = new BigInteger[0];
+        private string[] CandleSeries = new string[0];
         private int currentDisplay = 0;
         private const int nextDisplay = 5;
         private const int amountDisplay = 60;
-        private string[] items = {"4 VolumesAvg", "5 VolumesAvg" , "6 VolumesAvg" , "7 VolumesAvg" 
+        private string[] items = {"3 VolumesAvg","4 VolumesAvg", "5 VolumesAvg" , "6 VolumesAvg" , "7 VolumesAvg" 
                             , "8 VolumesAvg" ,"9 VolumesAvg" , "10 VolumesAvg" , "11 VolumesAvg" };
 
         public Form1()
@@ -41,8 +41,13 @@ namespace CandleStick
             if(result == DialogResult.OK)
             {
                 csvCandleData.ReadData(getCandleData.FileName);
-                Array.Resize<CandleStickData>(ref RawData, csvCandleData.RowLenght-1);
-                Array.Resize<CandleNormalData>(ref NormalData, csvCandleData.RowLenght - 1);
+
+                int size = csvCandleData.RowLenght - 1;
+                Array.Resize<CandleStickData>(ref RawData, size);
+                Array.Resize<BigInteger>(ref BinaryCandleProperty, size);
+                Array.Resize<string>(ref CandleSeries, size);
+                Array.Resize<BigInteger>(ref BitPack, size);
+
                 SetRawData();
                 SetChart();
                 InitComboBox();
@@ -86,52 +91,14 @@ namespace CandleStick
         }
         private string GetOutputData()
         {
-            StringBuilder data = new StringBuilder();
-            data.Append("RawCandleProperty,BinaryCandleProperty,BinaryPackage");
-            data.AppendLine();
-            for(int i = 0;i<BinaryCandleProperty.Length;i++)
+            StringBuilder output = new StringBuilder();
+
+            output.AppendFormat("{0},{1},{2}", "DT", "BitCandle", "RawCandle");
+            for(int i =0;i<RawData.Length;i++)
             {
-                string RawCandleProperty = BinaryCandleProperty[i].ToString();
-                string BinaryProperty = ToBinaryString(BinaryCandleProperty[i]);
-                while (BinaryProperty.Length != 11)
-                {
-                    if (BinaryProperty.Length > 11)
-                    {
-                        BinaryProperty.Remove(0);
-                    }
-                    else
-                    {
-                        string temp = "0";
-                        temp += BinaryProperty;
-                        BinaryProperty = temp;
-                    }
-                }
-                if (i < BinaryPackage.Length)
-                {
-                    string BinaryPack = ToBinaryString(BinaryPackage[i]);
-                    while (BinaryPack.Length != 121)
-                    {
-                        if (BinaryPack.Length > 121)
-                        {
-                            BinaryPack.Remove(0);
-                        }
-                        else
-                        {
-                            string temp = "0";
-                            temp += BinaryPack;
-                            BinaryPack = temp;
-                        }
-                    }
-                    data.AppendFormat("\"{0}\",\"{1}\",\"{2}\"", RawCandleProperty, BinaryProperty, BinaryPack);
-                    data.AppendLine();
-                }
-                else
-                {
-                    data.AppendFormat("\"{0}\",\"{1}\",\"{2}\"", RawCandleProperty, BinaryProperty,string.Empty);
-                    data.AppendLine();
-                }
+                output.AppendFormat("{0},{1},{2}",RawData[i].DateTime,ToBinaryString(BinaryCandleProperty[i]),BinaryCandleProperty);
             }
-            return data.ToString();
+            return output.ToString();
         }
         private void InitComboBox()
         {
@@ -195,6 +162,9 @@ namespace CandleStick
             int DayOfAvgVolume = 0;
             switch(VolumeAvg.Text)
             {
+                case "3 VolumesAvg":
+                    DayOfAvgVolume = 3;
+                    break;
                 case "4 VolumesAvg":
                     DayOfAvgVolume = 4;
                     break;
@@ -223,38 +193,9 @@ namespace CandleStick
                     DayOfAvgVolume = 4;
                     break;
             }
-            Package package = new Package();
-            var CandleProperty = package.getMaskData(RawData,DayOfAvgVolume);
 
-            List<BigInteger> temp = new List<BigInteger>();
-            List<BigInteger[]> InputData = new List<BigInteger[]>();
-            int size = CandleProperty.Length - 1;
-            int count = 0;
-            while(true)
-            {
-                temp.Add(CandleProperty[count]);
-                if(temp.Count == 11)
-                {
-                    InputData.Add(temp.ToArray());
-                    temp.Clear();
-                }
-                else if(count == size)
-                {
-                    InputData.Add(temp.ToArray());
-                    temp.Clear();
-                    break;
-                }
-                count++;
-            }
-            Array.Resize<BigInteger>(ref BinaryPackage, InputData.Count);
-            Array.Resize<BigInteger>(ref BinaryCandleProperty, CandleProperty.Length);
-
-            BinaryCandleProperty = CandleProperty;
-            
-            for(int i =0;i<InputData.Count;i++)
-            {
-                BinaryPackage[i] = package.Packing(InputData[i]);
-            }
+            Package Pack = new Package();
+            BinaryCandleProperty = Pack.getMaskData(RawData, DayOfAvgVolume);
 ;        }
         private string ToBinaryString(BigInteger data)
         {
