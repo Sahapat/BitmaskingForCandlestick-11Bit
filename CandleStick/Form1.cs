@@ -32,7 +32,6 @@ namespace CandleStick
             InitChart();
             VolumeAvg.Visible = false;
             Save.Visible = false;
-            MessageBox.Show(ToDecimal("00010").ToString());
         }
         private void GetData_Click(object sender, EventArgs e)
         {
@@ -273,19 +272,23 @@ namespace CandleStick
         private BigInteger ToDecimal(string RawBinary)
         {
             BigInteger output = 0;
-            char[] binary = RawBinary.ToCharArray();
+            char[] binary = RawBinary.ToArray();
+            int size = binary.Length;
 
-            for(int i = 1;i<=binary.Length;i++)
+            for (int i = 1; i <= size; i++)
             {
-                if(binary[binary.Length - i] == 0)
+                Console.WriteLine("Loop Count : " + i);
+                if (binary[size - i] == '0')
                 {
                     continue;
                 }
                 else
                 {
                     output += (BigInteger)Math.Pow(2, i - 1);
+                    Console.WriteLine("Loop " + i + " " + output);
                 }
             }
+
             return output;
         }
     }
