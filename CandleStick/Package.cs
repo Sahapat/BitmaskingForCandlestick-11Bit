@@ -60,15 +60,10 @@ namespace CandleStick
             }
             return output;
         }
-        public BigInteger Packing(BigInteger[] data)
+        public BigInteger Packing(BigInteger[] data,int NumPack)
         {
             BigInteger output = 0;
-            byte shift = 0;
-            for(int i =0;i<data.Length;i++)
-            {
-                output = output | data[i] << shift;
-                shift += 11;
-            }
+
             return output;
         }
         public BigInteger[] getMaskData(CandleStickData[] rawData, int DayOfAvgVolume)
@@ -193,7 +188,7 @@ namespace CandleStick
                 return (short)TypeTrend.UP;
             }
             else return (short)TypeTrend.DOWN;
-        }//Logic error
+        }//check
         private short checkLL(CandleStickData current, CandleStickData before)
         {
             double currentMin = Math.Min(current.Open, current.Close);
@@ -204,7 +199,7 @@ namespace CandleStick
                 return (short)TypeTrend.UP;
             }
             else return (short)TypeTrend.DOWN;
-        }//Logic error
+        }//check
         private short statusUpperShadow(double US,double US_SD,double avgUpShadow,double[] UScentroid)
         {
             if (US == 0) return (short)TypeCandle.NONE;
