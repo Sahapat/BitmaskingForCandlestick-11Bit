@@ -32,6 +32,7 @@ namespace CandleStick
             InitChart();
             VolumeAvg.Visible = false;
             Save.Visible = false;
+            MessageBox.Show(ToDecimal("00010").ToString());
         }
         private void GetData_Click(object sender, EventArgs e)
         {
@@ -256,7 +257,7 @@ namespace CandleStick
                 BinaryPackage[i] = package.Packing(InputData[i]);
             }
 ;        }
-        private static string ToBinaryString(BigInteger data)
+        private string ToBinaryString(BigInteger data)
         {
             var bytes = data.ToByteArray();
             var idx = bytes.Length - 1;
@@ -267,8 +268,25 @@ namespace CandleStick
             {
                 base2.Append(Convert.ToString(bytes[idx], 2).PadLeft(8, '0'));
             }
-
             return base2.ToString();
+        }
+        private BigInteger ToDecimal(string RawBinary)
+        {
+            BigInteger output = 0;
+            char[] binary = RawBinary.ToCharArray();
+
+            for(int i = 1;i<=binary.Length;i++)
+            {
+                if(binary[binary.Length - i] == 0)
+                {
+                    continue;
+                }
+                else
+                {
+                    output += (BigInteger)Math.Pow(2, i - 1);
+                }
+            }
+            return output;
         }
     }
 }
