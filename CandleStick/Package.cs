@@ -129,7 +129,7 @@ namespace CandleStick
                     maskData[i].LowerLow = checkLL(rawData[i], rawData[i - 1]);
                     maskData[i].GAP = checkLL(rawData[i], rawData[i - 1]);
                 }
-                if ((i + 1) % DayOfAvgVolume == 0 && i != 0)
+                if (i-DayOfAvgVolume >= 0)
                 {
                     double avgLast = 0;
                     int LastDay = 1;
