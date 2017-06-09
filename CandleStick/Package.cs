@@ -63,7 +63,10 @@ namespace CandleStick
         public BigInteger Packing(BigInteger[] data,int NumPack)
         {
             BigInteger output = 0;
-
+            for(int i =0;i<NumPack;i++)
+            {
+                output = (output << (i * 11)) | data[i];
+            }
             return output;
         }
         public BigInteger[] getMaskData(CandleStickData[] rawData, int DayOfAvgVolume)
