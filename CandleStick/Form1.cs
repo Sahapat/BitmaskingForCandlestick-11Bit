@@ -232,6 +232,11 @@ namespace CandleStick
 
             Package Pack = new Package();
             BinaryCandleProperty = Pack.getMaskData(RawData, DayOfAvgVolume);
+
+            for(int i =0;i<BinaryCandleProperty.Length;i++)
+            {
+            }
+
 ;        }
         private string ToBinaryString(BigInteger data)
         {
