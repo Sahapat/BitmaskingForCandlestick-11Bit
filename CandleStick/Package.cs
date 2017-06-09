@@ -129,8 +129,21 @@ namespace CandleStick
                     maskData[i].LowerLow = checkLL(rawData[i], rawData[i - 1]);
                     maskData[i].GAP = checkLL(rawData[i], rawData[i - 1]);
                 }
-                //Volume
-
+                if ((i + 1) % DayOfAvgVolume == 0 && i != 0)
+                {
+                    double avgLast = 0;
+                    int LastDay = 1;
+                    for (int j = i; j < (i+DayOfAvgVolume); j++,LastDay++)
+                    {
+                        avgLast += rawData[j-LastDay].Volume;
+                    }
+                    avgLast /= DayOfAvgVolume;
+                    maskData[i].Volume = checkVolume(rawData[i].Volume, avgLast);
+                }
+                else
+                {
+                    maskData[i].Volume = 0;
+                }
             }
             
             for (int i = 0;i<maskData.Length;i++)
@@ -257,16 +270,8 @@ namespace CandleStick
 
             else return (short)CandleGAP.NotGAP;
         }//check
-        private short checkVolume(double current,params double[] last)
+        private short checkVolume(double current,double avgLast)
         {
-            double avgLast = 0;
-
-            for(int i =0;i<last.Length;i++)
-            {
-                avgLast += last[i];
-            }
-            avgLast /= last.Length;
-
             if (current > avgLast)
             {
                 return (short)CheckVolume.Peak;
