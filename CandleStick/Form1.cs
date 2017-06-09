@@ -25,6 +25,7 @@ namespace CandleStick
         private const int amountDisplay = 60;
         private string[] items = {"3 VolumesAvg","4 VolumesAvg", "5 VolumesAvg" , "6 VolumesAvg" , "7 VolumesAvg" 
                             , "8 VolumesAvg" ,"9 VolumesAvg" , "10 VolumesAvg" , "11 VolumesAvg" };
+        private int DayOfAvgVolume = 0;
 
         public Form1()
         {
@@ -92,11 +93,34 @@ namespace CandleStick
         private string GetOutputData()
         {
             StringBuilder output = new StringBuilder();
-
-            output.AppendFormat("{0},{1},{2}", "DT", "BitCandle", "RawCandle");
+            StringBuilder CandleSeries = new StringBuilder();
+            
+            output.AppendFormat("{0},{1},{2},{3}", "DT", "BitCandle", "RawCandle","CandleSeries");
+            output.AppendLine();
             for(int i =0;i<RawData.Length;i++)
             {
-                output.AppendFormat("{0},{1},{2}",RawData[i].DateTime,ToBinaryString(BinaryCandleProperty[i]),BinaryCandleProperty);
+                CandleSeries.Clear();
+                string outBinaryCandle = string.Empty;
+                outBinaryCandle = ToBinaryString(BinaryCandleProperty[i]);
+                for (int j = 0;i<DayOfAvgVolume;j++)
+                {
+                }
+                while (outBinaryCandle.Length != 11)
+                {
+                    if(outBinaryCandle.Length > 11)
+                    {
+                        outBinaryCandle.Remove(0);
+                    }
+                    else
+                    {
+                        string temp = "0";
+                        temp += outBinaryCandle;
+                        outBinaryCandle = temp;
+                    }
+                }
+                
+                output.AppendFormat("{0},{1},{2},{3}",RawData[i].DateTime,outBinaryCandle,BinaryCandleProperty[i],CandleSeries);
+                output.AppendLine();
             }
             return output.ToString();
         }
@@ -159,7 +183,6 @@ namespace CandleStick
         }
         private void PackingData()
         {
-            int DayOfAvgVolume = 0;
             switch(VolumeAvg.Text)
             {
                 case "3 VolumesAvg":
