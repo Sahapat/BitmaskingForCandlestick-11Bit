@@ -92,6 +92,7 @@ namespace CandleStick
         }
         private string GetOutputData()
         {
+            MessageBox.Show("DayAVG:" + DayOfAvgVolume);
             StringBuilder output = new StringBuilder();
             StringBuilder CandleSeries = new StringBuilder();
             
@@ -102,8 +103,20 @@ namespace CandleStick
                 CandleSeries.Clear();
                 string outBinaryCandle = string.Empty;
                 outBinaryCandle = ToBinaryString(BinaryCandleProperty[i]);
-                for (int j = 0;i<DayOfAvgVolume;j++)
+                for (int j = DayOfAvgVolume;j> 0;j--)
                 {
+                    if(i-j >= 0)
+                    {
+                        CandleSeries.AppendFormat("{0}", BinaryCandleProperty[i - j]);
+                    }
+                    else
+                    {
+                        CandleSeries.Append("0");
+                    }
+                    if(j-1 > 0)
+                    {
+                        CandleSeries.Append(":");
+                    }
                 }
                 while (outBinaryCandle.Length != 11)
                 {
@@ -213,7 +226,7 @@ namespace CandleStick
                     DayOfAvgVolume = 11;
                     break;
                 default:
-                    DayOfAvgVolume = 4;
+                    DayOfAvgVolume = 3;
                     break;
             }
 
