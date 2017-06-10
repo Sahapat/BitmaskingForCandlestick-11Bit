@@ -103,11 +103,11 @@ namespace CandleStick
                 CandleSeries.Clear();
                 string outBinaryCandle = string.Empty;
                 outBinaryCandle = ToBinaryString(BinaryCandleProperty[i]);
-                for (int j = DayOfAvgVolume;j> 0;j--)
+                for (int j = DayOfAvgVolume;j> 0;j--)//bug
                 {
-                    if(i-j >= 0)
+                    if(i-j+1 >= 0)
                     {
-                        CandleSeries.AppendFormat("{0}", BinaryCandleProperty[i - j]);
+                        CandleSeries.AppendFormat("{0}", BinaryCandleProperty[i - j+1]);
                     }
                     else
                     {
@@ -235,6 +235,19 @@ namespace CandleStick
 
             for(int i =0;i<BinaryCandleProperty.Length;i++)
             {
+                var temp = new BigInteger[DayOfAvgVolume];
+                for(int j =0;j<DayOfAvgVolume;j++)
+                {
+                    if(i-j < 0)
+                    {
+                        temp[j] = BinaryCandleProperty[i+j];
+                        break;
+                    }
+                    else
+                    {
+                        
+                    }
+                }
             }
 
 ;        }
