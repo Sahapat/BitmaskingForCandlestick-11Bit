@@ -18,7 +18,7 @@ namespace CandleStick
         private CsvManager csvCandleData = new CsvManager();
         private CandleStickData[] RawData = new CandleStickData[0];
         private BigInteger[] BinaryCandleProperty = new BigInteger[0];
-        private BigInteger[] BitPack = new BigInteger[0];
+        private BigInteger[] RawPack = new BigInteger[0];
         private string[] CandleSeries = new string[0];
         private int currentDisplay = 0;
         private const int nextDisplay = 5;
@@ -47,7 +47,7 @@ namespace CandleStick
                 Array.Resize<CandleStickData>(ref RawData, size);
                 Array.Resize<BigInteger>(ref BinaryCandleProperty, size);
                 Array.Resize<string>(ref CandleSeries, size);
-                Array.Resize<BigInteger>(ref BitPack, size);
+                Array.Resize<BigInteger>(ref RawPack, size);
 
                 SetRawData();
                 SetChart();
@@ -96,14 +96,16 @@ namespace CandleStick
             StringBuilder output = new StringBuilder();
             StringBuilder CandleSeries = new StringBuilder();
             
-            output.AppendFormat("{0},{1},{2},{3}", "DT", "BitCandle", "RawCandle","CandleSeries");
+            output.AppendFormat("{0},{1},{2},{3},{4},{5}", "DT", "BitCandle", "RawCandle","CandleSeries","RawPack","RawPack");
             output.AppendLine();
             for(int i =0;i<RawData.Length;i++)
             {
                 CandleSeries.Clear();
                 string outBinaryCandle = string.Empty;
+                string BitPack = string.Empty;
                 outBinaryCandle = ToBinaryString(BinaryCandleProperty[i]);
-                for (int j = DayOfAvgVolume;j> 0;j--)//bug
+                BitPack = ToBinaryString(RawPack[i]);
+                for (int j = DayOfAvgVolume;j> 0;j--)
                 {
                     if(i-j+1 >= 0)
                     {
@@ -111,28 +113,38 @@ namespace CandleStick
                     }
                     else
                     {
-                        CandleSeries.Append("0");
-                    }
+                        CandleSeries.Append("0");                    }
                     if(j-1 > 0)
                     {
                         CandleSeries.Append(":");
                     }
                 }
-                while (outBinaryCandle.Length != 11)
+                while (outBinaryCandle.Length != 11 || BitPack.Length != DayOfAvgVolume*11)
                 {
                     if(outBinaryCandle.Length > 11)
                     {
                         outBinaryCandle.Remove(0);
                     }
-                    else
+                    else if(outBinaryCandle.Length < 11)
                     {
                         string temp = "0";
                         temp += outBinaryCandle;
                         outBinaryCandle = temp;
                     }
+
+                    if(BitPack.Length > DayOfAvgVolume*11)
+                    {
+                        outBinaryCandle.Remove(0);
+                    }
+                    else if(BitPack.Length < DayOfAvgVolume*11)
+                    {
+                        string temp = "0";
+                        temp += BitPack;
+                        BitPack = temp;
+                    }
                 }
                 
-                output.AppendFormat("{0},{1},{2},{3}",RawData[i].DateTime,outBinaryCandle,BinaryCandleProperty[i],CandleSeries);
+                output.AppendFormat("{0},{1},{2},{3},{4},{5}",RawData[i].DateTime,outBinaryCandle,BinaryCandleProperty[i],CandleSeries,BitPack,RawPack[i]);
                 output.AppendLine();
             }
             return output.ToString();
@@ -233,21 +245,21 @@ namespace CandleStick
             Package Pack = new Package();
             BinaryCandleProperty = Pack.getMaskData(RawData, DayOfAvgVolume);
 
-            for(int i =0;i<BinaryCandleProperty.Length;i++)
+            for(int i =0;i<BinaryCandleProperty.Length;i++)//bug
             {
                 var temp = new BigInteger[DayOfAvgVolume];
-                for(int j =0;j<DayOfAvgVolume;j++)
+                for(int j = 0;j<DayOfAvgVolume;j++)
                 {
-                    if(i-j < 0)
+                    if(i-j >= 0)
                     {
-                        temp[j] = BinaryCandleProperty[i+j];
-                        break;
+                        temp[j] = BinaryCandleProperty[i - j];
                     }
                     else
                     {
-                        
+                        temp[j] = 0;
                     }
                 }
+                RawPack[i] = Pack.Packing(temp, DayOfAvgVolume);
             }
 
 ;        }
