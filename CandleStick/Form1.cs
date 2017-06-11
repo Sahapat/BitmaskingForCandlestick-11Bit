@@ -17,6 +17,7 @@ namespace CandleStick
     {
         private CsvManager csvCandleData = new CsvManager();
         private CandleStickData[] RawData = new CandleStickData[0];
+        private CandleNormalData[] NormalData = new CandleNormalData[0];
         private BigInteger[] BinaryCandleProperty = new BigInteger[0];
         private BigInteger[] RawPack = new BigInteger[0];
         private string[] CandleSeries = new string[0];
@@ -48,6 +49,7 @@ namespace CandleStick
                 Array.Resize<BigInteger>(ref BinaryCandleProperty, size);
                 Array.Resize<string>(ref CandleSeries, size);
                 Array.Resize<BigInteger>(ref RawPack, size);
+                Array.Resize<CandleNormalData>(ref NormalData, size);
 
                 SetRawData();
                 SetChart();
@@ -60,6 +62,7 @@ namespace CandleStick
             {
                 currentDisplay = (currentDisplay <= 0) ? currentDisplay = 0 : currentDisplay -= nextDisplay;
                 candleChart.Series[0].Points.Clear();
+                normalChart.Series[0].Points.Clear();
                 SetChart();
             }
         }
@@ -69,6 +72,7 @@ namespace CandleStick
             {
                 currentDisplay = ((currentDisplay + nextDisplay) + amountDisplay > RawData.Length) ? currentDisplay = RawData.Length - amountDisplay : currentDisplay += nextDisplay;
                 candleChart.Series[0].Points.Clear();
+                normalChart.Series[0].Points.Clear();
                 SetChart();
             }
         }
@@ -201,10 +205,6 @@ namespace CandleStick
                 RawData[i - 1].Close = (float)csvCandleData.GetColumnData(5, i);
                 RawData[i - 1].Volume = csvCandleData.GetColumnData(6, i);
             }
-        }
-        private void SetNormalRawData()
-        {
-
         }
         private void PackingData()
         {
