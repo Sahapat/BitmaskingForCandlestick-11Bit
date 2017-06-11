@@ -245,7 +245,7 @@ namespace CandleStick
             Package Pack = new Package();
             BinaryCandleProperty = Pack.getMaskData(RawData, DayOfAvgVolume);
 
-            for(int i =0;i<BinaryCandleProperty.Length;i++)//bug
+            for(int i =0;i<BinaryCandleProperty.Length;i++)
             {
                 var temp = new BigInteger[DayOfAvgVolume];
                 for(int j = 0;j<DayOfAvgVolume;j++)
