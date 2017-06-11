@@ -65,7 +65,7 @@ namespace CandleStick
             BigInteger output = 0;
             for(int i =0;i<NumPack;i++)
             {
-                output = (output << (i * 11)) | data[i];
+                output = (output | (data[i] << (i * 11)));
             }
             return output;
         }
