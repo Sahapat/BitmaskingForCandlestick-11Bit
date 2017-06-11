@@ -96,7 +96,7 @@ namespace CandleStick
             StringBuilder output = new StringBuilder();
             StringBuilder CandleSeries = new StringBuilder();
             
-            output.AppendFormat("{0},{1},{2},{3},{4},{5}", "DT", "BitCandle", "RawCandle","CandleSeries","RawPack","RawPack");
+            output.AppendFormat("{0},{1},{2},{3},{4},{5}", "DT", "BitCandle", "RawCandle","CandleSeries","BitPack","RawPack");
             output.AppendLine();
             for(int i =0;i<RawData.Length;i++)
             {
