@@ -32,7 +32,7 @@ namespace CandleStick
 
     class Package
     {
-        public static CandleStatus[] UnPack(BigInteger package,int PackageCount)
+        public static CandleStatus[] UnPacks(BigInteger package,int PackageCount)
         {
             int packageKey = 2047;
             CandleStatus[] output = new CandleStatus[PackageCount];
@@ -58,6 +58,23 @@ namespace CandleStick
                 output[i].LowerLow = (short)((singleData[i] & Key1 << 9) >> 9);
                 output[i].HigherHigh = (short)((singleData[i] & Key1 << 10) >> 10);
             }
+            return output;
+        }
+        public static CandleStatus UnPack(BigInteger package)
+        {
+            CandleStatus output = new CandleStatus();
+            byte Key1 = 1;
+            byte Key2 = 3;
+
+            output.Volume = (short)(package & Key1);
+            output.LowerShadow = (short)((package & Key2 << 1) >> 1);
+            output.Body = (short)((package & Key2 << 3) >> 3);
+            output.UpperShadow = (short)((package & Key2 << 5) >> 5);
+            output.GAP = (short)((package & Key1 << 7) >> 7);
+            output.Direction = (short)((package & Key1 << 8) >> 8);
+            output.LowerLow = (short)((package & Key1 << 9) >> 9);
+            output.HigherHigh = (short)((package & Key1 << 10) >> 10);
+
             return output;
         }
         public BigInteger Packing(BigInteger[] data,int NumPack)
@@ -130,7 +147,7 @@ namespace CandleStick
                 {
                     maskData[i].HigherHigh = checkHH(rawData[i], rawData[i - 1]);
                     maskData[i].LowerLow = checkLL(rawData[i], rawData[i - 1]);
-                    maskData[i].GAP = checkLL(rawData[i], rawData[i - 1]);
+                    maskData[i].GAP = checkGAP(rawData[i],rawData[i-1]);
                 }
                 if (i-DayOfAvgVolume >= 0)
                 {
@@ -266,12 +283,14 @@ namespace CandleStick
         }//check
         private short checkGAP(CandleStickData currentData,CandleStickData beforeData)
         {
-            if (currentData.Low > beforeData.High || currentData.High < beforeData.Low)
+            //System.Windows.Forms.MessageBox.Show("Current L: " + currentData.Low + "Before H: " + beforeData.High + "\n" + "Current H:" + currentData.High + "Before L: " + currentData.Low);
+            if (currentData.Low > beforeData.High||currentData.High < beforeData.Low)
             {
                 return (short)CandleGAP.GAP;
             }
 
-            else return (short)CandleGAP.NotGAP;
+            else
+                return (short)CandleGAP.NotGAP;
         }//check
         private short checkVolume(double current,double avgLast)
         {
