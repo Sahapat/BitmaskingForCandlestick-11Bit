@@ -52,8 +52,10 @@ namespace CandleStick
                 Array.Resize<CandleNormalData>(ref NormalData, size);
 
                 SetRawData();
-                SetChart();
                 InitComboBox();
+                setNormalData();
+                SetChart();
+                SetNormalChart();
             }
         }
         private void Back_Click(object sender, EventArgs e)
@@ -64,6 +66,7 @@ namespace CandleStick
                 candleChart.Series[0].Points.Clear();
                 normalChart.Series[0].Points.Clear();
                 SetChart();
+                SetNormalChart();
             }
         }
         private void Next_Click(object sender, EventArgs e)
@@ -74,6 +77,7 @@ namespace CandleStick
                 candleChart.Series[0].Points.Clear();
                 normalChart.Series[0].Points.Clear();
                 SetChart();
+                SetNormalChart();
             }
         }
         private void Save_Click(object sender, EventArgs e)
@@ -184,6 +188,7 @@ namespace CandleStick
             normalChart.ChartAreas[0].AxisY.MajorGrid.LineColor = Color.Gray;
             normalChart.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Gold;
             normalChart.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Gold;
+            normalChart.ChartAreas[0].AxisY.LabelStyle.Enabled = false;
             normalChart.ChartAreas[0].BackColor = Color.Black;
             normalChart.BackColor = Color.Gray;
         }
@@ -192,6 +197,13 @@ namespace CandleStick
             for (int i = currentDisplay;i< currentDisplay+amountDisplay; i++)
             {
                 candleChart.Series[0].Points.AddXY(RawData[i].DateTime, RawData[i].High, RawData[i].Low, RawData[i].Open, RawData[i].Close);
+            }
+        }
+        private void SetNormalChart()
+        {
+            for (int i = currentDisplay; i < currentDisplay + amountDisplay; i++)
+            {
+                normalChart.Series[0].Points.AddXY(RawData[i].DateTime, NormalData[i].High, NormalData[i].Low, NormalData[i].Open, NormalData[i].Close);
             }
         }
         private void SetRawData()
@@ -205,6 +217,13 @@ namespace CandleStick
                 RawData[i - 1].Close = (float)csvCandleData.GetColumnData(5, i);
                 RawData[i - 1].Volume = csvCandleData.GetColumnData(6, i);
             }
+        }
+        private void setNormalData()
+        {
+            SetNormalData setnormal = new SetNormalData();
+            NormalData = setnormal.getNormalData(BinaryCandleProperty, 1000);
+            normalChart.ChartAreas[0].AxisY.Maximum = setnormal.Max + 3;
+            normalChart.ChartAreas[0].AxisY.Minimum = setnormal.Min-1;
         }
         private void PackingData()
         {
@@ -292,7 +311,6 @@ namespace CandleStick
                 else
                 {
                     output += (BigInteger)Math.Pow(2, i - 1);
-                    Console.WriteLine("Loop " + i + " " + output);
                 }
             }
 
