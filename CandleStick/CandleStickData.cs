@@ -18,7 +18,6 @@ namespace CandleStick
     };
     struct CandleNormalData
     {
-        public string DateTime;
         public float High;
         public float Low;
         public float Open;
