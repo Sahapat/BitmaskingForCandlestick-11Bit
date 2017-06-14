@@ -223,7 +223,7 @@ namespace CandleStick
             double currentMin = Math.Min(current.Open, current.Close);
             double beforeMin = Math.Min(before.Open, before.Close);
 
-            if (currentMin > beforeMin)
+            if (currentMin < beforeMin)
             {
                 return (short)TypeTrend.UP;
             }
@@ -283,7 +283,6 @@ namespace CandleStick
         }//check
         private short checkGAP(CandleStickData currentData,CandleStickData beforeData)
         {
-            //System.Windows.Forms.MessageBox.Show("Current L: " + currentData.Low + "Before H: " + beforeData.High + "\n" + "Current H:" + currentData.High + "Before L: " + currentData.Low);
             if (currentData.Low > beforeData.High||currentData.High < beforeData.Low)
             {
                 return (short)CandleGAP.GAP;

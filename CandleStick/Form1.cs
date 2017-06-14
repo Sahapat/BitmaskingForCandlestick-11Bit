@@ -176,6 +176,7 @@ namespace CandleStick
             candleChart.ChartAreas[0].AxisY.MajorGrid.LineColor = Color.Gray;
             candleChart.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Gold;
             candleChart.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Gold;
+            candleChart.ChartAreas[0].AxisY.IsStartedFromZero = false;
             candleChart.ChartAreas[0].BackColor = Color.Black;
             candleChart.BackColor = Color.Gray;
 
@@ -187,8 +188,8 @@ namespace CandleStick
             normalChart.ChartAreas[0].AxisX.MajorGrid.LineColor = Color.Gray;
             normalChart.ChartAreas[0].AxisY.MajorGrid.LineColor = Color.Gray;
             normalChart.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Gold;
-            normalChart.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Gold;
             normalChart.ChartAreas[0].AxisY.LabelStyle.Enabled = false;
+            normalChart.ChartAreas[0].AxisY.IsStartedFromZero = false;
             normalChart.ChartAreas[0].BackColor = Color.Black;
             normalChart.BackColor = Color.Gray;
         }
@@ -222,8 +223,6 @@ namespace CandleStick
         {
             SetNormalData setnormal = new SetNormalData();
             NormalData = setnormal.getNormalData(BinaryCandleProperty, 1000);
-            normalChart.ChartAreas[0].AxisY.Maximum = setnormal.Max + 3;
-            normalChart.ChartAreas[0].AxisY.Minimum = setnormal.Min-1;
         }
         private void PackingData()
         {

@@ -9,8 +9,6 @@ namespace CandleStick
 {
     class SetNormalData
     {
-        public float Min = 0;
-        public float Max = 0;
         private CandleStatus[] status = new CandleStatus[0];
         private CandleNormalData[] normalData = new CandleNormalData[0];
         private int StartPoint;
@@ -32,7 +30,6 @@ namespace CandleStick
             Array.Resize<CandleStatus>(ref status, package.Length);
             Array.Resize<CandleNormalData>(ref normalData, package.Length);
             StartPoint = startPoint;
-            Min = StartPoint;
             for (int i = 0; i < package.Length; i++)
             {
                 status[i] = Package.UnPack(package[i]);
@@ -149,23 +146,26 @@ namespace CandleStick
                         normalData[i].High = normalData[i].Open + None;
                     }
                 }
-                if(i == 0)
-                {
-                    Max = normalData[i].High;
-                }
-                else
-                {
-                    Max = (normalData[i - 1].High < normalData[i].High) ? Max = normalData[i].High : Max = normalData[i - 1].High;
-                }
             }
             
         }
         private void Shifting()
         {
-            for(int i =1;i<normalData.Length;i++)
+            for(int i = 0;i<normalData.Length;i++)
             {
-                if (status[i].GAP == 1)
+                if (status[i].GAP == (int)CandleGAP.GAP)
                 {
+                    if (status[i].Direction == 1)
+                    {
+                        while (normalData[i].Low <= normalData[i - 1].High)
+                        {
+                            ShiftUp(i);
+                        }
+                    }
+                    else
+                    {
+                        while(normalData[i].)
+                    }
                 }
             }
         }
