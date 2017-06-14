@@ -153,9 +153,23 @@ namespace CandleStick
         {
             for(int i = 0;i<normalData.Length;i++)
             {
+                if (i != 0)
+                {
+                    while (Math.Min(normalData[i].Open, normalData[i].Close) != Math.Min(normalData[i - 1].Open, normalData[i - 1].Close))
+                    {
+                        if (Math.Min(normalData[i].Open, normalData[i].Close) > Math.Min(normalData[i - 1].Open, normalData[i - 1].Close))
+                        {
+                            ShiftDown(i);
+                        }
+                        else
+                        {
+                            ShiftUp(i);
+                        }
+                    }
+                }
                 if (status[i].GAP == (int)CandleGAP.GAP)
                 {
-                    if (status[i].Direction == 1)
+                    if (status[i].HigherHigh == 1)
                     {
                         while (normalData[i].Low <= normalData[i - 1].High)
                         {
@@ -164,7 +178,21 @@ namespace CandleStick
                     }
                     else
                     {
-                        while(normalData[i].)
+                        while (normalData[i].High >= normalData[i - 1].Low)
+                        {
+                            ShiftDown(i);
+                        }
+                    }
+                }
+                else
+                {
+                    if (status[i].HigherHigh == 1)
+                    {
+                        ShiftUp(i);
+                    }
+                    else if(status[i].LowerLow == 1)
+                    {
+                        ShiftDown(i);
                     }
                 }
             }
