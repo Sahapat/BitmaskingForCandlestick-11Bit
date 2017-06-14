@@ -151,22 +151,9 @@ namespace CandleStick
         }
         private void Shifting()
         {
-            for(int i = 0;i<normalData.Length;i++)
+            for(int i = 1;i<=normalData.Length-1;i++)
             {
-                if (i != 0)
-                {
-                    while (Math.Min(normalData[i].Open, normalData[i].Close) != Math.Min(normalData[i - 1].Open, normalData[i - 1].Close))
-                    {
-                        if (Math.Min(normalData[i].Open, normalData[i].Close) > Math.Min(normalData[i - 1].Open, normalData[i - 1].Close))
-                        {
-                            ShiftDown(i);
-                        }
-                        else
-                        {
-                            ShiftUp(i);
-                        }
-                    }
-                }
+                SettingDefaultCandle(i);
                 if (status[i].GAP == (int)CandleGAP.GAP)
                 {
                     if (status[i].HigherHigh == 1)
@@ -194,6 +181,20 @@ namespace CandleStick
                     {
                         ShiftDown(i);
                     }
+                }
+            }
+        }
+        private void SettingDefaultCandle(int idx)
+        {
+            while (Math.Min(normalData[idx].Open, normalData[idx].Close) != Math.Min(normalData[idx - 1].Open, normalData[idx - 1].Close))
+            {
+                if (Math.Min(normalData[idx].Open, normalData[idx].Close) > Math.Min(normalData[idx - 1].Open, normalData[idx - 1].Close))
+                {
+                    ShiftDown(idx);
+                }
+                else
+                {
+                    ShiftUp(idx);
                 }
             }
         }
