@@ -34,6 +34,7 @@ namespace CandleStick
             InitChart();
             VolumeAvg.Visible = false;
             Save.Visible = false;
+            this.MaximizeBox = false;
         }
         private void GetData_Click(object sender, EventArgs e)
         {
