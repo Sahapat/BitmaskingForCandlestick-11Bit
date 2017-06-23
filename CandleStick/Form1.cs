@@ -93,6 +93,7 @@ namespace CandleStick
                 string path = saveCsv.FileName;
                 string outData = GetOutputData();
                 csvCandleData.WriteData(path, outData);
+                MessageBox.Show("Save Success" + "\n" + "DayOfAverageVolume : " + DayOfAvgVolume);
             }
         }
         private void VolumeAvg_SelectedIndexChanged(object sender, EventArgs e)
@@ -101,7 +102,6 @@ namespace CandleStick
         }
         private string GetOutputData()
         {
-            MessageBox.Show("DayAVG:" + DayOfAvgVolume);
             StringBuilder output = new StringBuilder();
             StringBuilder CandleSeries = new StringBuilder();
             
